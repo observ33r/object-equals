@@ -3,14 +3,14 @@ const spliceArray = Array.prototype.splice, isTypedArray = ArrayBuffer.isView;
 
 const REACT_ELEMENT_TYPE = Symbol.for('react.transitional.element');
 
-const isWebWorkerWithUserAgent = (typeof self === 'object'
-    && typeof self.navigator?.userAgent === 'string');
+const isBrowserOrWebWorker = (typeof self === 'object' || typeof window === 'object')
+    && typeof navigator === 'object' && typeof navigator.userAgent === 'string';
 
 const isV8 = (globalThis.chrome === 'object')
-    || (isWebWorkerWithUserAgent && self.navigator.userAgent.search(/chrome/i) > -1);
+    || (isBrowserOrWebWorker && navigator.userAgent.search(/chrome/i) > -1);
 
 const isJSC = (globalThis.$?.IsHTMLDDA !== undefined)
-    || (isWebWorkerWithUserAgent && self.navigator.userAgent.match(/^(?!.*(chrome|crios)).*safari/i) !== null);
+    || (isBrowserOrWebWorker && navigator.userAgent.match(/^(?!.*(chrome|crios)).*safari/i) !== null);
 
 export function objectEqualsCore(target, source, circular, crossrealm, react, symbols, fallback, cache) {
     if (typeof target === 'object' && typeof source === 'object') {
