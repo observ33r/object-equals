@@ -129,4 +129,10 @@ describe('objectEquals', () => {
         expect(objectEquals(set1, set2)).toBe(false);
     });
 
+    test('Null vs Object edge case', () => {
+        expect(objectEquals({}, null)).toBe(false);
+        expect(objectEquals(null, {})).toBe(false);
+        expect(objectEquals(null, null)).toBe(true);
+    });
+
 });
