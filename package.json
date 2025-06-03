@@ -4,6 +4,7 @@
   "description": "A fast, flexible and robust utility for deep equality comparison with type-specific logic and engine-aware design.",
   "type": "module",
   "main": "dist/object-equals.esm.js",
+  "browser": "dist/object-equals.web.esm.js",
   "types": "dist/object-equals.d.ts",
   "exports": {
     ".": {
