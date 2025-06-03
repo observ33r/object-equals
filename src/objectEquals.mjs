@@ -7,16 +7,15 @@ const isRuntime = (typeof process === 'object');
 const isDeno = (typeof Deno === 'object');
 const isBun = (typeof Bun === 'object');
 
-const isWebWorkerWithUserAgent = (typeof self === 'object'
-    && typeof self.navigator?.userAgent === 'string');
+const isBrowserOrWebWorker = (typeof self === 'object' || typeof window === 'object')
+    && typeof navigator === 'object' && typeof navigator.userAgent === 'string';
 
 const isV8 = (globalThis.chrome === 'object')
-    || (isWebWorkerWithUserAgent && self.navigator.userAgent.search(/chrome/i) > -1)
-    || (isRuntime && process.versions?.v8 !== undefined)
-        && (process.title === 'node' || isDeno);
+    || (isBrowserOrWebWorker && navigator.userAgent.search(/chrome/i) > -1)
+    || (isRuntime && process.versions?.v8 !== undefined && !isBun);
 
 const isJSC = (globalThis.$?.IsHTMLDDA !== undefined)
-    || (isWebWorkerWithUserAgent && self.navigator.userAgent.match(/^(?!.*(chrome|crios)).*safari/i) !== null)
+    || (isBrowserOrWebWorker && navigator.userAgent.match(/^(?!.*(chrome|crios)).*safari/i) !== null)
     || (isRuntime && process.versions?.webkit !== undefined);
 
 if (typeof Buffer !== 'function' && !isDeno)

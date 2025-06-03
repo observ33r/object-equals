@@ -11,8 +11,10 @@ import { objectEquals } from '../dist/object-equals.esm.js';
 const nestedSize = 16;
 const depth = 2;
 
-const isNode = (typeof process === 'object'
-    && process.title === 'node');
+const isNode = typeof process === 'object'
+    && process.versions?.v8 !== undefined
+    && typeof Deno === 'undefined'
+    && typeof Bun === 'undefined';
 
 const deepStrictEqualWrapper = (target, source) => {
     try {

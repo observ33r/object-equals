@@ -9,15 +9,17 @@ import React from 'react';
 
 import { objectEquals } from '../dist/object-equals.esm.js';
 
-const isNode = (typeof process === 'object'
-    && process.title === 'node');
+const isNode = typeof process === 'object'
+    && process.versions?.v8 !== undefined
+    && typeof Deno === 'undefined'
+    && typeof Bun === 'undefined';
 
 const deepStrictEqualWrapper = (target, source) => {
-	try {
-		return deepStrictEqual(target, source) === undefined;
-	} catch {
-		return false;
-	}
+    try {
+        return deepStrictEqual(target, source) === undefined;
+    } catch {
+        return false;
+    }
 };
 
 const generateReactTree = (size) => 
