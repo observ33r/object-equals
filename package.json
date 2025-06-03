@@ -6,6 +6,7 @@
   "main": "dist/object-equals.esm.js",
   "browser": "dist/object-equals.web.esm.js",
   "types": "dist/object-equals.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": "./dist/object-equals.esm.js",
