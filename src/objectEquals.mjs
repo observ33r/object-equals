@@ -35,9 +35,13 @@ if (deepStrictEqual !== false)
 export function objectEqualsCore(target, source, circular, crossrealm, react, symbols, fallback, cache) {
     if (typeof target === 'object' && typeof source === 'object') {
         if (!crossrealm) {
-            var tor = target?.constructor;
-            if (tor !== source?.constructor)
-                return false;
+            if (target == null || source == null)
+                return target === source;
+            var tor = target.constructor;
+            if (tor !== source.constructor 
+                && !hasOwnProperty.call(target, 'constructor') 
+                && !hasOwnProperty.call(source, 'constructor'))
+                    return false;
         }
         if (react && target.$$typeof === REACT_ELEMENT_TYPE && source.$$typeof === REACT_ELEMENT_TYPE)
             return target.type === source.type 
