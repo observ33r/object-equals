@@ -49,10 +49,13 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                 && target.ref === source.ref
                 && objectEqualsCore(target.props, source.props, circular, crossrealm, react, symbols, fallback, cache);
         if (circular) {
-            const cached = cache.get(target);
+            let cached = cache.get(target);
             if (cached !== undefined) 
                 return cached === source;
-            cache.set(target, source);
+            cached = cache.get(source);
+            if (cached !== undefined) 
+                return cached === target;
+            cache.set(target, source).set(source, target);
         }
         while (true) {
             if (tor !== undefined) {
