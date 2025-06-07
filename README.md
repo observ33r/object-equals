@@ -29,6 +29,7 @@ A fast, flexible and robust utility for deep equality comparison with type-speci
 ```bash
 npm install @observ33r/object-equals
 ```
+
 ## Usage
 
 ### `objectEquals(target, source, [options])`
@@ -76,10 +77,10 @@ console.log(objectEquals(obj1, obj2)); //true
 ```javascript
 import { objectEquals } from '@observ33r/object-equals';
 
-class extendedMap extends Map {}
+class ExtendedMap extends Map {}
 
-const map1 = new extendedMap([['key-1', 'value-1']]);
-const map2 = new extendedMap([['key-1', 'value-1']]);
+const map1 = new ExtendedMap([['key-1', 'value-1']]);
+const map2 = new ExtendedMap([['key-1', 'value-1']]);
 
 console.log(objectEquals(map1, map2)); //true
 ```
@@ -2875,6 +2876,18 @@ npm run benchmark:react
 npm run benchmark:advanced 
 ```
 
+## Build
+
+This package uses [rollup](https://rollupjs.org/) to generate clean and optimized ESM builds. 
+
+To build package from source code, run:
+
+```bash
+npm run build
+```
+
+This will generate the output in the `dist/` folder. Web and main builds are handled via custom rollup config and exposed under appropriate `exports` in `package.json`.
+
 ## Web Environment Support
 
 If you're using this package in a browser or client-side environment, you can import the web-only variant:
@@ -2888,12 +2901,34 @@ Ideal for client-side apps or SSR targets like Next.js, Astro, etc.
 
 ## Testing
 
-Run the included tests with Jest:
+This package includes a carefully structured test suite, ensuring correctness and compatibility with expected semantics.
+
+### Structure
+
+```bash
+tests/
+├─ objectEquals.test.js          # Core tests with basic and edge cases
+└─ objectEquals.lodash.test.js   # Parity tests ported from lodash.isEqual
+```
+
+### Notes
+
+- The **core tests** cover basic type-specific checks, circular references, cross-realm objects, symbols, etc.
+- The **parity tests** ensure alignment with lodash’s deep equality expectations (ported from QUnit to Vitest).
+- All tests are written in [Vitest](https://vitest.dev) with native ESM support and zero transform overhead.
+
+You can run the full suite with:
 
 ```bash
 npm test
 ```
 
+or run individual tests:
+
+```bash
+npx vitest run tests/objectEquals.test.js
+npx vitest run tests/objectEquals.lodash.test.js
+```
 ## Contributing
 
 Feel free to open issues or submit pull requests on [GitHub](https://github.com/observ33r/object-equals).
