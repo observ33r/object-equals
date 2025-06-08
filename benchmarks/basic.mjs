@@ -1,6 +1,6 @@
-import { run, bench, summary, group } from 'mitata';
+import { run, bench, group, summary } from 'mitata';
 import areDeeplyEqual from 'are-deeply-equal';
-import * as fastEquals from 'fast-equals'
+import * as fastEquals from 'fast-equals';
 import isEqualLodash from 'lodash/isEqual.js';
 import { deepStrictEqual } from 'node:assert';
 import { dequal } from 'dequal';
