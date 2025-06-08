@@ -1,78 +1,23 @@
-import { run, bench, group, summary } from 'mitata';
+import { run } from 'mitata';
 import reactFastCompare from 'react-fast-compare';
-import areDeeplyEqual from 'are-deeply-equal';
-import * as fastEquals from 'fast-equals';
-import isEqualLodash from 'lodash/isEqual.js';
-import { deepStrictEqual } from 'node:assert';
-import { dequal } from 'dequal';
 import React from 'react';
+import { benchSizes, candidates } from "./helpers.mjs";
 
-import { objectEquals } from '../dist/object-equals.esm.js';
+candidates.push({
+    label: 'react-fast-compare',
+    create: (target, source) => () => reactFastCompare(target, source)
+});
 
 const sizes = [16, 512, 4096, 16386];
 
-const isNode = typeof process === 'object'
-    && process.versions?.v8 !== undefined
-    && typeof Deno === 'undefined'
-    && typeof Bun === 'undefined';
-
-const deepStrictEqualWrapper = (target, source) => {
-    try {
-        return deepStrictEqual(target, source) === undefined;
-    } catch {
-        return false;
-    }
-};
-
-const generateReactTree = (size) => 
-    React.createElement('ul', { 
-        className: 'itemList', 
-        children: Array.from({ length: size }, (_, i) => 
+const generateReactTree = (size) =>
+    React.createElement('ul', {
+        className: 'itemList',
+        children: Array.from({ length: size }, (_, i) =>
             React.createElement('li', { className: 'item' }, `Item ${i}`))
     });
 
-sizes.forEach(size => {
-    group(`React elements [size=${size}]`, () => {
-        summary(() => {
-            bench('object-equals', function* () {
-                const target = generateReactTree(size);
-                const source = generateReactTree(size);
-                yield () => objectEquals(target, source, { react: true })
-            });
-            bench('react-fast-compare', function* () {
-                const target = generateReactTree(size);
-                const source = generateReactTree(size);
-                yield () => reactFastCompare(target, source)
-            });
-            bench('are-deeply-equal', function* () {
-                const target = generateReactTree(size);
-                const source = generateReactTree(size);
-                yield () => areDeeplyEqual(target, source)
-            });
-            bench('fast-equals', function* () {
-                const target = generateReactTree(size);
-                const source = generateReactTree(size);
-                yield () => fastEquals.deepEqual(target, source)
-            });
-            bench('dequal', function* () {
-                const target = generateReactTree(size);
-                const source = generateReactTree(size);
-                yield () => dequal(target, source)
-            });
-            bench('lodash.isEqual', function* () {
-                const target = generateReactTree(size);
-                const source = generateReactTree(size);
-                yield () => isEqualLodash(target, source)
-            });
-            if (isNode) {
-                bench('node.deepStrictEqual', function* () {
-                    const target = generateReactTree(size);
-                    const source = generateReactTree(size);
-                    yield () => deepStrictEqualWrapper(target, source)
-                });
-            }
-        });
-    });
-});
+benchSizes(sizes, `React elements`,
+    ({size}) => generateReactTree(size), { react: true });
 
 await run();
