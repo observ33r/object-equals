@@ -1,13 +1,16 @@
 import { run, bench, group, summary } from 'mitata';
 import areDeeplyEqual from 'are-deeply-equal';
 import * as fastEquals from 'fast-equals';
-import { dequal } from 'dequal';
 import isEqualLodash from 'lodash/isEqual.js';
 import { deepStrictEqual } from 'node:assert';
+import { dequal } from 'dequal';
 
 import { objectGenerator } from '@observ33r/object-generator';
 import { objectEquals } from '../dist/object-equals.esm.js';
 
+const sizes = [16, 512, 4096, 16386];
+
+const valueTypes = [String, Number, Boolean];
 const nestedSize = 16;
 const depth = 2;
 
@@ -24,1691 +27,449 @@ const deepStrictEqualWrapper = (target, source) => {
     }
 };
 
-group('Object with mixed primitivs [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Object with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', size, valueTypes });
+                const source = objectGenerator({ prefix: 'object-equals', size, valueTypes });
+                yield () => objectEquals(target, source);
             });
-        }
-    });
-});
-
-group('Object with mixed primitivs [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 512, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 512, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', size, valueTypes });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', size, valueTypes });
+                yield () => areDeeplyEqual(target, source);
             });
-        }
-    });
-});
-
-group('Object with mixed primitivs [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 4096, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 4096, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', size, valueTypes });
+                const source = objectGenerator({ prefix: 'fast-equals', size, valueTypes });
+                yield () => fastEquals.deepEqual(target, source);
             });
-        }
-    });
-});
-
-group('Object with mixed primitivs [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16386, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16386, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('dequal', function* () {
+                const target = objectGenerator({ prefix: 'dequal', size, valueTypes });
+                const source = objectGenerator({ prefix: 'dequal', size, valueTypes });
+                yield () => dequal(target, source);
             });
-        }
-    });
-});
-
-group('Nested Object with mixed primitive values [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', size, valueTypes });
+                const source = objectGenerator({ prefix: 'lodash', size, valueTypes });
+                yield () => isEqualLodash(target, source);
             });
-        }
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', size, valueTypes });
+                    const source = objectGenerator({ prefix: 'node', size, valueTypes });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Nested Object with mixed primitive values [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Nested Object with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', size, nestedSize, depth, valueTypes });
+                const source = objectGenerator({ prefix: 'object-equals', size, nestedSize, depth, valueTypes });
+                yield () => objectEquals(target, source);
             });
-        }
-    });
-});
-
-group('Nested Object with mixed primitive values [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', size, nestedSize, depth, valueTypes });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', size, nestedSize, depth, valueTypes });
+                yield () => areDeeplyEqual(target, source);
             });
-        }
-    });
-});
-
-group('Nested Object with mixed primitive values [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, nestedSize, depth, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', size, nestedSize, depth, valueTypes });
+                const source = objectGenerator({ prefix: 'fast-equals', size, nestedSize, depth, valueTypes });
+                yield () => fastEquals.deepEqual(target, source);
             });
-        }
-    });
-});
-
-group('Array with mixed primitive values [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, type: Array, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('dequal', function* () {
+                const target = objectGenerator({ prefix: 'dequal', size, nestedSize, depth, valueTypes });
+                const source = objectGenerator({ prefix: 'dequal', size, nestedSize, depth, valueTypes });
+                yield () => dequal(target, source);
             });
-        }
-    });
-});
-
-group('Array with mixed primitive values [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, type: Array, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', size, nestedSize, depth, valueTypes });
+                const source = objectGenerator({ prefix: 'lodash', size, nestedSize, depth, valueTypes });
+                yield () => isEqualLodash(target, source);
             });
-        }
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', size, nestedSize, depth, valueTypes });
+                    const source = objectGenerator({ prefix: 'node', size, nestedSize, depth, valueTypes });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Array with mixed primitive values [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, type: Array, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Array with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', type: Array, size, valueTypes });
+                const source = objectGenerator({ prefix: 'object-equals', type: Array, size, valueTypes });
+                yield () => objectEquals(target, source);
             });
-        }
-    });
-});
-
-group('Array with mixed primitive values [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, type: Array, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Array, size, valueTypes });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Array, size, valueTypes });
+                yield () => areDeeplyEqual(target, source);
             });
-        }
-    });
-});
-
-group('Nested Array with mixed primitive values [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', type: Array, size, valueTypes });
+                const source = objectGenerator({ prefix: 'fast-equals', type: Array, size, valueTypes });
+                yield () => fastEquals.deepEqual(target, source);
             });
-        }
-    });
-});
-
-group('Nested Array with mixed primitive values [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'dequal', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('dequal', function* () {
+                const target = objectGenerator({ prefix: 'dequal', type: Array, size, valueTypes });
+                const source = objectGenerator({ prefix: 'dequal', type: Array, size, valueTypes });
+                yield () => dequal(target, source);
             });
-        }
-    });
-});
-
-group('Nested Array with mixed primitive values [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'dequal', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', type: Array, size, valueTypes });
+                const source = objectGenerator({ prefix: 'lodash', type: Array, size, valueTypes });
+                yield () => isEqualLodash(target, source);
             });
-        }
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', type: Array, size, valueTypes });
+                    const source = objectGenerator({ prefix: 'node', type: Array, size, valueTypes });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Nested Array with mixed primitive values [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, nestedSize, depth, type: Array, valueTypes: [String, Number, Boolean, Array] });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Nested Array with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                const source = objectGenerator({ prefix: 'object-equals', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                yield () => objectEquals(target, source);
             });
-        }
-    });
-});
-
-group('Map with mixed primitive values [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, type: Map, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                yield () => areDeeplyEqual(target, source);
             });
-        }
-    });
-});
-
-group('Map with mixed primitive values [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, type: Map, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                const source = objectGenerator({ prefix: 'fast-equals', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                yield () => fastEquals.deepEqual(target, source);
             });
-        }
-    });
-});
-
-group('Map with mixed primitive values [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, type: Map, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('dequal', function* () {
+                const target = objectGenerator({ prefix: 'dequal', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                const source = objectGenerator({ prefix: 'dequal', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                yield () => dequal(target, source);
             });
-        }
-    });
-});
-
-group('Map with mixed primitive values [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, type: Map, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                const source = objectGenerator({ prefix: 'lodash', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                yield () => isEqualLodash(target, source);
             });
-        }
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                    const source = objectGenerator({ prefix: 'node', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Nested Map with mixed primitive values [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Map with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', type: Map, size, valueTypes });
+                const source = objectGenerator({ prefix: 'object-equals', type: Map, size, valueTypes });
+                yield () => objectEquals(target, source);
             });
-        }
-    });
-});
-
-group('Nested Map with mixed primitive values [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'dequal', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Map, size, valueTypes });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Map, size, valueTypes });
+                yield () => areDeeplyEqual(target, source);
             });
-        }
-    });
-});
-
-group('Nested Map with mixed primitive values [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'dequal', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', type: Map, size, valueTypes });
+                const source = objectGenerator({ prefix: 'fast-equals', type: Map, size, valueTypes });
+                yield () => fastEquals.deepEqual(target, source);
             });
-        }
-    });
-});
-
-group('Nested Map with mixed primitive values [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, nestedSize, depth, type: Map, valueTypes: [String, Number, Boolean, Map] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('dequal', function* () {
+                const target = objectGenerator({ prefix: 'dequal', type: Map, size, valueTypes });
+                const source = objectGenerator({ prefix: 'dequal', type: Map, size, valueTypes });
+                yield () => dequal(target, source);
             });
-        }
-    });
-});
-
-group('Set with mixed primitive values [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, type: Set, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', type: Map, size, valueTypes });
+                const source = objectGenerator({ prefix: 'lodash', type: Map, size, valueTypes });
+                yield () => isEqualLodash(target, source);
             });
-        }
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', type: Map, size, valueTypes });
+                    const source = objectGenerator({ prefix: 'node', type: Map, size, valueTypes });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Set with mixed primitive values [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, type: Set, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Nested Map with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                const source = objectGenerator({ prefix: 'object-equals', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                yield () => objectEquals(target, source);
             });
-        }
-    });
-});
-
-group('Set with mixed primitive values [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, type: Set, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                yield () => areDeeplyEqual(target, source);
             });
-        }
-    });
-});
-
-group('Set with mixed primitive values [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'dequal', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, type: Set, valueTypes: [String, Number, Boolean] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                const source = objectGenerator({ prefix: 'fast-equals', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                yield () => fastEquals.deepEqual(target, source);
             });
-        }
-    });
-});
-
-group('Shuffled Set with mixed primitive values [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'dequal', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('dequal', function* () {
+                const target = objectGenerator({ prefix: 'dequal', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                const source = objectGenerator({ prefix: 'dequal', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                yield () => dequal(target, source);
             });
-        }
-    });
-});
-
-group('Shuffled Set with mixed primitive values [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'dequal', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                const source = objectGenerator({ prefix: 'lodash', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                yield () => isEqualLodash(target, source);
             });
-        }
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                    const source = objectGenerator({ prefix: 'node', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Shuffled Set with mixed primitive values [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'dequal', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Set with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', type: Set, size, valueTypes });
+                const source = objectGenerator({ prefix: 'object-equals', type: Set, size, valueTypes });
+                yield () => objectEquals(target, source);
             });
-        }
-    });
-});
-
-group('Shuffled Set with mixed primitive values [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ prefix: 'dequal', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'dequal', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 42 });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, type: Set, valueTypes: [String, Number, Boolean], shuffle: true, seed: 94 });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, valueTypes });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, valueTypes });
+                yield () => areDeeplyEqual(target, source);
             });
-        }
-    });
-});
-
-group('Nested Set with mixed primitive values [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', type: Set, size, valueTypes });
+                const source = objectGenerator({ prefix: 'fast-equals', type: Set, size, valueTypes });
+                yield () => fastEquals.deepEqual(target, source);
             });
-        }
-    });
-});
-
-group('Nested Set with mixed primitive values [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('dequal', function* () {
+                const target = objectGenerator({ prefix: 'dequal', type: Set, size, valueTypes });
+                const source = objectGenerator({ prefix: 'dequal', type: Set, size, valueTypes });
+                yield () => dequal(target, source);
             });
-        }
-    });
-});
-
-group('Nested Set with mixed primitive values [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', type: Set, size, valueTypes });
+                const source = objectGenerator({ prefix: 'lodash', type: Set, size, valueTypes });
+                yield () => isEqualLodash(target, source);
             });
-        }
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', type: Set, size, valueTypes });
+                    const source = objectGenerator({ prefix: 'node', type: Set, size, valueTypes });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Nested Set with mixed primitive values [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-                const source = objectGenerator({ prefix: 'node.deepStrictEqual', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set] });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Shuffled Set with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', type: Set, size, valueTypes, shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'object-equals', type: Set, size, valueTypes, shuffle: true, seed: 94 });
+                yield () => objectEquals(target, source);
             });
-        }
-    });
-});
-
-group('Shuffled nested Set with mixed primitive values [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => isEqualLodash(target, source);
-        });
-    });
-});
-
-group('Shuffled nested Set with mixed primitive values [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'object-equals', size: 512, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 512, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 512, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 512, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => isEqualLodash(target, source);
-        });
-    });
-});
-
-group('Shuffled nested Set with mixed primitive values [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'object-equals', size: 4096, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 4096, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 4096, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 4096, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => isEqualLodash(target, source);
-        });
-    });
-});
-
-group('Shuffled nested Set with mixed primitive values [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'object-equals', size: 16386, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'are-deeply-equal', size: 16386, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'fast-equals', size: 16386, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize, depth, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 42 });
-            const source = objectGenerator({ prefix: 'lodash.isEqual', size: 16386, nestedSize: 16, depth: 2, type: Set, valueTypes: [String, Number, Boolean, Set], shuffle: true, seed: 94 });
-            yield () => isEqualLodash(target, source);
-        });
-    });
-});
-
-group('Typed Array [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ size: 16, type: Uint8Array });
-            const source = objectGenerator({ size: 16, type: Uint8Array });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ size: 16, type: Uint8Array });
-            const source = objectGenerator({ size: 16, type: Uint8Array });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ size: 16, type: Uint8Array });
-            const source = objectGenerator({ size: 16, type: Uint8Array });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ size: 16, type: Uint8Array });
-            const source = objectGenerator({ size: 16, type: Uint8Array });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ size: 16, type: Uint8Array });
-            const source = objectGenerator({ size: 16, type: Uint8Array });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ size: 16, type: Uint8Array });
-                const source = objectGenerator({ size: 16, type: Uint8Array });
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, valueTypes, shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, valueTypes, shuffle: true, seed: 94 });
+                yield () => areDeeplyEqual(target, source);
             });
-        }
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', type: Set, size, valueTypes, shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'fast-equals', type: Set, size, valueTypes, shuffle: true, seed: 94 });
+                yield () => fastEquals.deepEqual(target, source);
+            });
+            bench('dequal', function* () {
+                const target = objectGenerator({ prefix: 'dequal', type: Set, size, valueTypes, shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'dequal', type: Set, size, valueTypes, shuffle: true, seed: 94 });
+                yield () => dequal(target, source);
+            });
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', type: Set, size, valueTypes, shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'lodash', type: Set, size, valueTypes, shuffle: true, seed: 94 });
+                yield () => isEqualLodash(target, source);
+            });
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', type: Set, size, valueTypes, shuffle: true, seed: 42 });
+                    const source = objectGenerator({ prefix: 'node', type: Set, size, valueTypes, shuffle: true, seed: 94 });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Typed Array [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ size: 512, type: Uint8Array });
-            const source = objectGenerator({ size: 512, type: Uint8Array });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ size: 512, type: Uint8Array });
-            const source = objectGenerator({ size: 512, type: Uint8Array });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ size: 512, type: Uint8Array });
-            const source = objectGenerator({ size: 512, type: Uint8Array });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ size: 512, type: Uint8Array });
-            const source = objectGenerator({ size: 512, type: Uint8Array });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ size: 512, type: Uint8Array });
-            const source = objectGenerator({ size: 512, type: Uint8Array });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ size: 512, type: Uint8Array });
-                const source = objectGenerator({ size: 512, type: Uint8Array });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Nested Set with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                const source = objectGenerator({ prefix: 'object-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                yield () => objectEquals(target, source);
             });
-        }
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                yield () => areDeeplyEqual(target, source);
+            });
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                const source = objectGenerator({ prefix: 'fast-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                yield () => fastEquals.deepEqual(target, source);
+            });
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                const source = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                yield () => isEqualLodash(target, source);
+            });
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                    const source = objectGenerator({ prefix: 'node', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Typed Array [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ size: 4096, type: Uint8Array });
-            const source = objectGenerator({ size: 4096, type: Uint8Array });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ size: 4096, type: Uint8Array });
-            const source = objectGenerator({ size: 4096, type: Uint8Array });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ size: 4096, type: Uint8Array });
-            const source = objectGenerator({ size: 4096, type: Uint8Array });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ size: 4096, type: Uint8Array });
-            const source = objectGenerator({ size: 4096, type: Uint8Array });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ size: 4096, type: Uint8Array });
-            const source = objectGenerator({ size: 4096, type: Uint8Array });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ size: 4096, type: Uint8Array });
-                const source = objectGenerator({ size: 4096, type: Uint8Array });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Shuffled nested Set with mixed primitive values [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ prefix: 'object-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'object-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
+                yield () => objectEquals(target, source);
             });
-        }
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
+                yield () => areDeeplyEqual(target, source);
+            });
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ prefix: 'fast-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'fast-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
+                yield () => fastEquals.deepEqual(target, source);
+            });
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
+                yield () => isEqualLodash(target, source);
+            });
+        });
     });
 });
 
-group('Typed Array [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = objectGenerator({ size: 16386, type: Uint8Array });
-            const source = objectGenerator({ size: 16386, type: Uint8Array });
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = objectGenerator({ size: 16386, type: Uint8Array });
-            const source = objectGenerator({ size: 16386, type: Uint8Array });
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('fast-equals', function* () {
-            const target = objectGenerator({ size: 16386, type: Uint8Array });
-            const source = objectGenerator({ size: 16386, type: Uint8Array });
-            yield () => fastEquals.deepEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = objectGenerator({ size: 16386, type: Uint8Array });
-            const source = objectGenerator({ size: 16386, type: Uint8Array });
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = objectGenerator({ size: 16386, type: Uint8Array });
-            const source = objectGenerator({ size: 16386, type: Uint8Array });
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = objectGenerator({ size: 16386, type: Uint8Array });
-                const source = objectGenerator({ size: 16386, type: Uint8Array });
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Typed Array [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ type: Uint8Array, size });
+                const source = objectGenerator({ type: Uint8Array, size });
+                yield () => objectEquals(target, source);
             });
-        }
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ type: Uint8Array, size });
+                const source = objectGenerator({ type: Uint8Array, size });
+                yield () => areDeeplyEqual(target, source);
+            });
+            bench('fast-equals', function* () {
+                const target = objectGenerator({ type: Uint8Array, size });
+                const source = objectGenerator({ type: Uint8Array, size });
+                yield () => fastEquals.deepEqual(target, source);
+            });
+            bench('dequal', function* () {
+                const target = objectGenerator({ type: Uint8Array, size });
+                const source = objectGenerator({ type: Uint8Array, size });
+                yield () => dequal(target, source);
+            });
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ type: Uint8Array, size });
+                const source = objectGenerator({ type: Uint8Array, size });
+                yield () => isEqualLodash(target, source);
+            });
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = objectGenerator({ type: Uint8Array, size });
+                    const source = objectGenerator({ type: Uint8Array, size });
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
-group('Data View [size=16]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-                const source = new DataView(objectGenerator({ size: 16, type: Uint8Array }).buffer);
-                yield () => deepStrictEqualWrapper(target, source);
+sizes.forEach(size => {
+    group(`Data View [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                yield () => objectEquals(target, source);
             });
-        }
-    });
-});
-
-group('Data View [size=512]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-                const source = new DataView(objectGenerator({ size: 512, type: Uint8Array }).buffer);
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('are-deeply-equal', function* () {
+                const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                yield () => areDeeplyEqual(target, source);
             });
-        }
-    });
-});
-
-group('Data View [size=4096]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-                const source = new DataView(objectGenerator({ size: 4096, type: Uint8Array }).buffer);
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('dequal', function* () {
+                const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                yield () => dequal(target, source);
             });
-        }
-    });
-});
-
-group('Data View [size=16386]', () => {
-    summary(() => {
-        bench('object-equals', function* () {
-            const target = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-            yield () => objectEquals(target, source);
-        });
-        bench('are-deeply-equal', function* () {
-            const target = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-            yield () => areDeeplyEqual(target, source);
-        });
-        bench('dequal', function* () {
-            const target = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-            yield () => dequal(target, source);
-        });
-        bench('lodash.isEqual', function* () {
-            const target = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-            const source = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-            yield () => isEqualLodash(target, source);
-        });
-        if (isNode) {
-            bench('node.deepStrictEqual', function* () {
-                const target = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-                const source = new DataView(objectGenerator({ size: 16386, type: Uint8Array }).buffer);
-                yield () => deepStrictEqualWrapper(target, source);
+            bench('lodash.isEqual', function* () {
+                const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                yield () => isEqualLodash(target, source);
             });
-        }
+            if (isNode) {
+                bench('node.deepStrictEqual', function* () {
+                    const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    yield () => deepStrictEqualWrapper(target, source);
+                });
+            }
+        });
     });
 });
 
