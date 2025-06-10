@@ -7,7 +7,7 @@ const isRuntime = (typeof process === 'object');
 const isDeno = (typeof Deno === 'object');
 const isBun = (typeof Bun === 'object');
 
-const isBrowserOrWebWorker = (typeof self === 'object' || typeof window === 'object')
+const isBrowserOrWebWorker = (typeof window === 'object' || typeof self === 'object')
     && typeof navigator === 'object' && typeof navigator.userAgent === 'string';
 
 const isV8 = (globalThis.chrome === 'object')
@@ -23,14 +23,8 @@ if (typeof Buffer !== 'function' && !isDeno)
     catch { var Buffer = false; }
 
 if (isBun || isDeno)
-    try { var { deepStrictEqual } = await import('node:assert'); } 
-    catch { var deepStrictEqual = false; }
-
-if (deepStrictEqual !== false)
-    var deepStrictEqualWrapper = (target, source) => {
-        try { return deepStrictEqual(target, source) === undefined; } 
-        catch { return false; }
-    };
+    try { var { isDeepStrictEqual } = await import('node:util'); } 
+    catch { var isDeepStrictEqual = false; }
 
 export function objectEqualsCore(target, source, circular, crossrealm, react, symbols, fallback, cache) {
     if (typeof target === 'object' && typeof source === 'object') {
@@ -126,8 +120,8 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                     if (isBun && targetLength > 160)
                         return Bun.deepEquals(target, source);
                     if (targetLength > 384) {
-                        if (isDeno && deepStrictEqual)
-                            return deepStrictEqualWrapper(target, source);
+                        if (isDeno && isDeepStrictEqual)
+                            return isDeepStrictEqual(target, source);
                         if (Buffer) {
                             target = new Uint8Array(target.buffer, target.byteOffset, targetLength);
                             source = new Uint8Array(source.buffer, source.byteOffset, targetLength);
@@ -147,8 +141,8 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                 if (tor === ArrayBuffer || tor === SharedArrayBuffer) {
                     if (isBun)
                         return Bun.deepEquals(target, source);
-                    if (isDeno && deepStrictEqual && target.byteLength > 1024)
-                        return deepStrictEqualWrapper(target, source);
+                    if (isDeno && isDeepStrictEqual && target.byteLength > 1024)
+                        return isDeepStrictEqual(target, source);
                     target = new Uint8Array(target), source = new Uint8Array(source), tor = Uint8Array;
                 }
                 if (tor === Uint8Array || isTypedArray(target)) {

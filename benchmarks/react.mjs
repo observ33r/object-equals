@@ -3,7 +3,7 @@ import reactFastCompare from 'react-fast-compare';
 import areDeeplyEqual from 'are-deeply-equal';
 import * as fastEquals from 'fast-equals';
 import isEqualLodash from 'lodash/isEqual.js';
-import { deepStrictEqual } from 'node:assert';
+import { isDeepStrictEqual } from 'node:util';
 import { dequal } from 'dequal';
 import React from 'react';
 
@@ -15,14 +15,6 @@ const isNode = typeof process === 'object'
     && process.versions?.v8 !== undefined
     && typeof Deno === 'undefined'
     && typeof Bun === 'undefined';
-
-const deepStrictEqualWrapper = (target, source) => {
-    try {
-        return deepStrictEqual(target, source) === undefined;
-    } catch {
-        return false;
-    }
-};
 
 const generateReactTree = (size) => 
     React.createElement('ul', { 
@@ -65,10 +57,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source)
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = generateReactTree(size);
                     const source = generateReactTree(size);
-                    yield () => deepStrictEqualWrapper(target, source)
+                    yield () => isDeepStrictEqual(target, source)
                 });
             }
         });
