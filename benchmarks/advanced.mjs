@@ -2,7 +2,7 @@ import { run, bench, group, summary } from 'mitata';
 import areDeeplyEqual from 'are-deeply-equal';
 import * as fastEquals from 'fast-equals';
 import isEqualLodash from 'lodash/isEqual.js';
-import { deepStrictEqual } from 'node:assert';
+import { isDeepStrictEqual } from 'node:util';
 import { dequal } from 'dequal';
 
 import { objectGenerator } from '@observ33r/object-generator';
@@ -18,14 +18,6 @@ const isNode = typeof process === 'object'
     && process.versions?.v8 !== undefined
     && typeof Deno === 'undefined'
     && typeof Bun === 'undefined';
-
-const deepStrictEqualWrapper = (target, source) => {
-    try {
-        return deepStrictEqual(target, source) === undefined;
-    } catch {
-        return false;
-    }
-};
 
 sizes.forEach(size => {
     group(`Object with mixed primitive values [size=${size}]`, () => {
@@ -56,10 +48,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', size, valueTypes });
                     const source = objectGenerator({ prefix: 'node', size, valueTypes });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -95,10 +87,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', size, nestedSize, depth, valueTypes });
                     const source = objectGenerator({ prefix: 'node', size, nestedSize, depth, valueTypes });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -134,10 +126,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Array, size, valueTypes });
                     const source = objectGenerator({ prefix: 'node', type: Array, size, valueTypes });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -173,10 +165,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
                     const source = objectGenerator({ prefix: 'node', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -212,10 +204,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Map, size, valueTypes });
                     const source = objectGenerator({ prefix: 'node', type: Map, size, valueTypes });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -251,10 +243,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
                     const source = objectGenerator({ prefix: 'node', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -290,10 +282,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Set, size, valueTypes });
                     const source = objectGenerator({ prefix: 'node', type: Set, size, valueTypes });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -329,10 +321,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Set, size, valueTypes, shuffle: true, seed: 42 });
                     const source = objectGenerator({ prefix: 'node', type: Set, size, valueTypes, shuffle: true, seed: 94 });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -363,10 +355,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
                     const source = objectGenerator({ prefix: 'node', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -429,10 +421,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ type: Uint8Array, size });
                     const source = objectGenerator({ type: Uint8Array, size });
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });
@@ -463,10 +455,10 @@ sizes.forEach(size => {
                 yield () => isEqualLodash(target, source);
             });
             if (isNode) {
-                bench('node.deepStrictEqual', function* () {
+                bench('node.isDeepStrictEqual', function* () {
                     const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
                     const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
-                    yield () => deepStrictEqualWrapper(target, source);
+                    yield () => isDeepStrictEqual(target, source);
                 });
             }
         });

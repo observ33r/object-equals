@@ -3,7 +3,7 @@ const spliceArray = Array.prototype.splice, isTypedArray = ArrayBuffer.isView;
 
 const REACT_ELEMENT_TYPE = Symbol.for('react.transitional.element');
 
-const isBrowserOrWebWorker = (typeof self === 'object' || typeof window === 'object')
+const isBrowserOrWebWorker = (typeof window === 'object' || typeof self === 'object')
     && typeof navigator === 'object' && typeof navigator.userAgent === 'string';
 
 const isV8 = (globalThis.chrome === 'object')
@@ -113,9 +113,8 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                             return false;
                     return true;
                 }
-                if (tor === ArrayBuffer || tor === SharedArrayBuffer) {
+                if (tor === ArrayBuffer || tor === SharedArrayBuffer)
                     target = new Uint8Array(target), source = new Uint8Array(source), tor = Uint8Array;
-                }
                 if (tor === Uint8Array || isTypedArray(target)) {
                     const targetLength = target.length;
                     if (targetLength !== source.length)
