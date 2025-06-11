@@ -18,13 +18,13 @@ const isJSC = (globalThis.$?.IsHTMLDDA !== undefined)
     || (isBrowserOrWebWorker && navigator.userAgent.match(/^(?!.*(chrome|crios)).*safari/i) !== null)
     || (isRuntime && process.versions?.webkit !== undefined);
 
+if (isDeno)
+    try { var { isDeepStrictEqual } = await import('node:util'); } 
+    catch { var isDeepStrictEqual = false; }
+
 if (typeof Buffer !== 'function' && !isDeno)
     try { var { Buffer } = await import('node:buffer'); } 
     catch { var Buffer = false; }
-
-if (isBun || isDeno)
-    try { var { isDeepStrictEqual } = await import('node:util'); } 
-    catch { var isDeepStrictEqual = false; }
 
 export function objectEqualsCore(target, source, circular, crossrealm, react, symbols, fallback, cache) {
     if (typeof target === 'object' && typeof source === 'object') {
