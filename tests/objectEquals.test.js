@@ -56,11 +56,9 @@ describe('objectEquals', () => {
     });
     
     test('DataView comparison', () => {
-        const buff1 = new ArrayBuffer(4);
-        const buff2 = new ArrayBuffer(4);
-        new DataView(buff1).setInt32(0, 42);
-        new DataView(buff2).setInt32(0, 42);
-        expect(objectEquals(new DataView(buff1), new DataView(buff2))).toBe(true);
+        const dataView1 = new DataView(new ArrayBuffer(4)).setInt32(0, 42);
+        const dataView2 = new DataView(new ArrayBuffer(4)).setInt32(0, 42);
+        expect(objectEquals(dataView1, dataView2)).toBe(true);
     });
     
     test('Date comparison', () => {
