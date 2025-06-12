@@ -12,7 +12,7 @@ import { objectEquals } from '../dist/object-equals.esm.js';
 const sizes = [16, 512, 4096, 16386];
 
 const isNode = typeof process === 'object'
-    && process.versions?.v8 !== undefined
+    && typeof process.versions?.node === 'string'
     && typeof Deno === 'undefined'
     && typeof Bun === 'undefined';
 
