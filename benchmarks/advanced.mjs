@@ -7,6 +7,7 @@ import { dequal } from 'dequal';
 
 import { objectGenerator } from '@observ33r/object-generator';
 import { objectEquals } from '../dist/object-equals.esm.js';
+import { objectEquals as objectEqualsNode } from '../dist/object-equals.node.esm.js';
 
 const sizes = [16, 512, 4096, 16386];
 
@@ -14,8 +15,10 @@ const valueTypes = [String, Number, Boolean];
 const nestedSize = 16;
 const depth = 2;
 
-const isNode = typeof process === 'object'
-    && process.versions?.v8 !== undefined
+const isRuntime = (typeof process === 'object');
+
+const isNode = (isRuntime)
+    && typeof process.versions?.node === 'string'
     && typeof Deno === 'undefined'
     && typeof Bun === 'undefined';
 
@@ -420,16 +423,50 @@ sizes.forEach(size => {
                 const source = objectGenerator({ type: Uint8Array, size });
                 yield () => isEqualLodash(target, source);
             });
-            if (isNode) {
-                bench('node.isDeepStrictEqual', function* () {
-                    const target = objectGenerator({ type: Uint8Array, size });
-                    const source = objectGenerator({ type: Uint8Array, size });
-                    yield () => isDeepStrictEqual(target, source);
-                });
-            }
         });
     });
 });
+
+if (isRuntime) {
+    sizes.forEach(size => {
+        group(`Typed Array (runtime-specific) [size=${size}]`, () => {
+            summary(() => {
+                bench('object-equals', function* () {
+                    const target = objectGenerator({ type: Uint8Array, size });
+                    const source = objectGenerator({ type: Uint8Array, size });
+                    yield () => objectEqualsNode(target, source);
+                });
+                bench('are-deeply-equal', function* () {
+                    const target = objectGenerator({ type: Uint8Array, size });
+                    const source = objectGenerator({ type: Uint8Array, size });
+                    yield () => areDeeplyEqual(target, source);
+                });
+                bench('fast-equals', function* () {
+                    const target = objectGenerator({ type: Uint8Array, size });
+                    const source = objectGenerator({ type: Uint8Array, size });
+                    yield () => fastEquals.deepEqual(target, source);
+                });
+                bench('dequal', function* () {
+                    const target = objectGenerator({ type: Uint8Array, size });
+                    const source = objectGenerator({ type: Uint8Array, size });
+                    yield () => dequal(target, source);
+                });
+                bench('lodash.isEqual', function* () {
+                    const target = objectGenerator({ type: Uint8Array, size });
+                    const source = objectGenerator({ type: Uint8Array, size });
+                    yield () => isEqualLodash(target, source);
+                });
+                if (isNode) {
+                    bench('node.isDeepStrictEqual', function* () {
+                        const target = objectGenerator({ type: Uint8Array, size });
+                        const source = objectGenerator({ type: Uint8Array, size });
+                        yield () => isDeepStrictEqual(target, source);
+                    });
+                }
+            });
+        });
+    });
+}
 
 sizes.forEach(size => {
     group(`Data View [size=${size}]`, () => {
@@ -454,15 +491,44 @@ sizes.forEach(size => {
                 const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
                 yield () => isEqualLodash(target, source);
             });
-            if (isNode) {
-                bench('node.isDeepStrictEqual', function* () {
-                    const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
-                    const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
-                    yield () => isDeepStrictEqual(target, source);
-                });
-            }
         });
     });
 });
+
+if (isRuntime) {
+    sizes.forEach(size => {
+        group(`Data View (runtime-specific) [size=${size}]`, () => {
+            summary(() => {
+                bench('object-equals', function* () {
+                    const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    yield () => objectEqualsNode(target, source);
+                });
+                bench('are-deeply-equal', function* () {
+                    const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    yield () => areDeeplyEqual(target, source);
+                });
+                bench('dequal', function* () {
+                    const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    yield () => dequal(target, source);
+                });
+                bench('lodash.isEqual', function* () {
+                    const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                    yield () => isEqualLodash(target, source);
+                });
+                if (isNode) {
+                    bench('node.isDeepStrictEqual', function* () {
+                        const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                        const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                        yield () => isDeepStrictEqual(target, source);
+                    });
+                }
+            });
+        });
+    });
+}
 
 await run();
