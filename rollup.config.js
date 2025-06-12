@@ -13,13 +13,13 @@ export default defineConfig([
     },
     plugins: [terser()],
   },
-  // Web-safe ESM Build
+  // Node-specific ESM Build
   {
-    input: 'src/objectEquals.web.mjs',
+    input: 'src/objectEquals.node.mjs',
     output: {
-      file: 'dist/object-equals.web.esm.js',
+      file: 'dist/object-equals.node.esm.js',
       format: 'esm',
-      sourcemap: true,
+      sourcemap: false,
     },
     plugins: [terser()],
   },
