@@ -3,14 +3,28 @@ const spliceArray = Array.prototype.splice, isTypedArray = ArrayBuffer.isView;
 
 const REACT_ELEMENT_TYPE = Symbol.for('react.transitional.element');
 
+const isRuntime = (typeof process === 'object');
+const isDeno = (typeof Deno === 'object');
+const isBun = (typeof Bun === 'object');
+
 const isBrowserOrWebWorker = (typeof window === 'object' || typeof self === 'object')
     && typeof navigator === 'object' && typeof navigator.userAgent === 'string';
 
 const isV8 = (globalThis.chrome === 'object')
-    || (isBrowserOrWebWorker && navigator.userAgent.search(/chrome/i) > -1);
+    || (isBrowserOrWebWorker && navigator.userAgent.search(/chrome/i) > -1)
+    || (isRuntime && process.versions?.v8 !== undefined && !isBun);
 
 const isJSC = (globalThis.$?.IsHTMLDDA !== undefined)
-    || (isBrowserOrWebWorker && navigator.userAgent.match(/^(?!.*(chrome|crios)).*safari/i) !== null);
+    || (isBrowserOrWebWorker && navigator.userAgent.match(/^(?!.*(chrome|crios)).*safari/i) !== null)
+    || (isRuntime && process.versions?.webkit !== undefined);
+
+if (isDeno)
+    try { var { isDeepStrictEqual } = await import('node:util'); } 
+    catch { var isDeepStrictEqual = false; }
+
+if (typeof Buffer !== 'function' && !isDeno)
+    try { var { Buffer } = await import('node:buffer'); } 
+    catch { var Buffer = false; }
 
 export function objectEqualsCore(target, source, circular, crossrealm, react, symbols, fallback, cache) {
     if (typeof target === 'object' && typeof source === 'object') {
@@ -103,6 +117,17 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                     const targetLength = target.byteLength;
                     if (targetLength !== source.byteLength)
                         return false;
+                    if (isBun && targetLength > 160)
+                        return Bun.deepEquals(target, source);
+                    if (targetLength > 384) {
+                        if (isDeno && isDeepStrictEqual)
+                            return isDeepStrictEqual(target, source);
+                        if (Buffer) {
+                            target = new Uint8Array(target.buffer, target.byteOffset, targetLength);
+                            source = new Uint8Array(source.buffer, source.byteOffset, targetLength);
+                            return Buffer.compare(target, source) === 0;
+                        }
+                    }
                     const alignedOffset = targetLength & ~3;
                     if (alignedOffset)
                         for (let index = alignedOffset - 4; index >= 0; index -= 4)
@@ -113,12 +138,22 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                             return false;
                     return true;
                 }
-                if (tor === ArrayBuffer || tor === SharedArrayBuffer)
+                if (tor === ArrayBuffer || tor === SharedArrayBuffer) {
+                    if (isBun)
+                        return Bun.deepEquals(target, source);
+                    if (isDeno && isDeepStrictEqual && target.byteLength > 1024)
+                        return isDeepStrictEqual(target, source);
                     target = new Uint8Array(target), source = new Uint8Array(source), tor = Uint8Array;
+                }
                 if (tor === Uint8Array || isTypedArray(target)) {
                     const targetLength = target.length;
                     if (targetLength !== source.length)
                         return false;
+                    if (targetLength > 288 && Buffer) {
+                        if (!isBun && (tor !== Uint8Array || tag !== '[object Uint8Array]'))
+                            target = new Uint8Array(target.buffer), source = new Uint8Array(source.buffer);
+                        return Buffer.compare(target, source) === 0;
+                    }
                     const alignedOffset = (targetLength > 64)
                         ? targetLength & ~3 : 0;
                     if (alignedOffset) {
