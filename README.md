@@ -1,6 +1,6 @@
 [![npm](https://img.shields.io/npm/v/@observ33r/object-equals.svg)](https://www.npmjs.com/package/@observ33r/object-equals)
+[![JSR](https://jsr.io/badges/@observ33r/object-equals)](https://jsr.io/@observ33r/object-equals)
 [![Size](https://badgen.net/bundlephobia/minzip/@observ33r/object-equals)](https://bundlephobia.com/package/@observ33r/object-equals)
-[![Web-safe](https://img.shields.io/badge/web--safe-available-2ea44f?logo=browser&logoColor=white)](#web-environment-support)
 [![License](https://img.shields.io/npm/l/@observ33r/object-equals.svg)](https://github.com/observ33r/object-equals/blob/main/LICENSE)
 
 # object-equals
@@ -12,14 +12,20 @@ A fast, flexible and robust utility for deep equality comparison with type-speci
 - **High Performance**  
   Outperforms popular libraries like `lodash.isEqual`, `fast-equals`, `dequal`, `are-deeply-equal` and `node.isDeepStrictEqual`.
 
-- **Engine-aware design**  
+- **Engine-Aware Design**  
   Tailored execution paths for V8 and JSC based engines to maximize performance.
+
+- **Web-First Architecture**  
+  Uses a lightweight, browser-safe implementation by default with full compatibility across all modern browsers and runtimes.
   
 - **Broad Support**  
   Handles objects, arrays, sets, maps, array buffers, typed arrays, data views, booleans, strings, numbers, bigints, dates, errors, regular expressions and primitives.
   
 - **Customizable**  
   Fine-tune behavior with options for handling circular references, cross-realm objects, react elements and more.
+
+- **Fully Tested**  
+  Includes over 40 unit tests with complete parity against `lodash.isEqual` and edge case coverage.
   
 - **Type-Safe**  
   Fully typed with TypeScript declarations.
@@ -2468,9 +2474,11 @@ summary
 > `dequal` is excluded from the test because it returns an incorrect result. An issue has been opened on the official GitHub repository: [https://github.com/lukeed/dequal/issues/31](https://github.com/lukeed/dequal/issues/31).
 
 > [!NOTE]
-> `node.deepStrictEqual` is excluded due to excessive memory usage, causing a "JavaScript heap out of memory" crash at size=4096 and beyond. This is likely due to inefficient handling of deeply nested, shuffled structures, leading to unsustainable memory demands (e.g., creating large temporary arrays during comparison). Increasing the heap limit (e.g., `--max-old-space-size=8192`) could mitigate this, but it compromises reproducibility across systems.
+> `node.isDeepStrictEqual` is excluded due to excessive memory usage, causing a "JavaScript heap out of memory" crash at size=4096 and beyond. This is likely due to inefficient handling of deeply nested, shuffled structures, leading to unsustainable memory demands (e.g., creating large temporary arrays during comparison). Increasing the heap limit (e.g., `--max-old-space-size=8192`) could mitigate this, but it compromises reproducibility across systems.
 
 ### Typed Array
+
+#### Runtime-specific
 
 | Library | 16 | 512 | 4096 | 16386 | Speed Range |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -2678,7 +2686,191 @@ summary
 
 </details>
 
+#### Web-safe
+
+| Library | 16 | 512 | 4096 | 16386 | Speed Range |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| object-equals | 18.78 ns | 143.03 ns | 683.49 ns | 2.54 µs | 1.00x (baseline) |
+| dequal | 19.30 ns | 385.19 ns | 2.97 µs | 12.02 µs | 1.03x-4.74x slower |
+| fast-equals | 22.06 ns | 394.27 ns | 2.98 µs | 11.90 µs | 1.17x-4.69x slower |
+| are-deeply-equal | 48.52 ns | 345.69 ns | 2.49 µs | 9.71 µs | 2.58x-3.83x slower |
+| lodash.isEqual | 1.94 µs | 3.52 µs | 15.17 µs | 54.11 µs | 103.36x-21.34x slower |
+
+<details>
+<summary>Full benchmark results with hardware counters</summary>
+
+```console
+clk: ~3.62 GHz
+cpu: AMD Ryzen 5 3600 6-Core Processor
+runtime: node 24.1.0 (x64-linux)
+
+benchmark                   avg (min … max) p75 / p99    (min … top 1%)
+------------------------------------------- -------------------------------
+• Typed Array [size=16]
+------------------------------------------- -------------------------------
+object-equals                 18.78 ns/iter  18.78 ns █                    
+                      (17.86 ns … 75.90 ns)  26.90 ns ██▂                  
+                    (  0.10  b …  58.52  b)   0.21  b ███▅▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   5.24 ipc ( 93.91% cache)    0.01 branch misses
+          74.79 cycles  392.12 instructions    0.04 c-refs    0.00 c-misses
+
+are-deeply-equal              48.52 ns/iter  48.02 ns   █                  
+                     (42.44 ns … 156.73 ns)  90.14 ns   █                  
+                    ( 34.94  b … 264.18  b) 184.24  b ▁▁█▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   3.53 ipc ( 96.70% cache)    0.01 branch misses
+         196.85 cycles  695.69 instructions    6.11 c-refs    0.20 c-misses
+
+fast-equals                   22.06 ns/iter  21.88 ns █                    
+                     (21.56 ns … 100.60 ns)  27.04 ns █▇                   
+                    (  0.09  b …  64.14  b)   0.20  b ██▃▃▃▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   4.90 ipc ( 94.20% cache)    0.01 branch misses
+          89.40 cycles  438.04 instructions    0.04 c-refs    0.00 c-misses
+
+dequal                        19.30 ns/iter  19.06 ns █                    
+                      (17.87 ns … 85.28 ns)  34.90 ns █▂                   
+                    (  0.09  b …  52.21  b)   0.18  b ██▃▂▁▄▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   5.13 ipc ( 92.91% cache)    0.01 branch misses
+          75.07 cycles  384.79 instructions    0.03 c-refs    0.00 c-misses
+
+lodash.isEqual                 1.94 µs/iter   1.95 µs  █                   
+                        (1.86 µs … 2.31 µs)   2.28 µs ▂█▄▂                 
+                    (522.76  b … 982.76  b) 736.51  b ████▆▅▃▃▁▂▂▁▁▂▁▂▁▁▃▃▂
+                   2.42 ipc ( 99.70% cache)    7.34 branch misses
+          7.35k cycles  17.77k instructions  875.36 c-refs    2.63 c-misses
+
+summary
+  object-equals
+   1.03x faster than dequal
+   1.17x faster than fast-equals
+   2.58x faster than are-deeply-equal
+   103.36x faster than lodash.isEqual
+
+• Typed Array [size=512]
+------------------------------------------- -------------------------------
+object-equals                143.03 ns/iter 140.04 ns  █                   
+                    (134.79 ns … 371.58 ns) 235.04 ns ▅█                   
+                    ( 53.18  b … 320.20  b) 208.14  b ██▃▂▂▁▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁
+                   4.92 ipc ( 95.71% cache)    0.02 branch misses
+         548.72 cycles   2.70k instructions    7.12 c-refs    0.31 c-misses
+
+are-deeply-equal             345.69 ns/iter 345.19 ns    █                 
+                    (329.11 ns … 545.74 ns) 404.24 ns    █                 
+                    ( 45.88  b … 323.63  b) 184.14  b ▁▂▃██▅▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁
+                   5.65 ipc ( 95.67% cache)    1.02 branch misses
+          1.33k cycles   7.52k instructions    6.37 c-refs    0.28 c-misses
+
+fast-equals                  394.27 ns/iter 408.53 ns █▅ █                 
+                    (361.02 ns … 599.40 ns) 510.18 ns ██▅█                 
+                    (  0.09  b … 127.56  b)   0.50  b ████▆▃▃▃▄▄▄▃▃▅▄▃▁▁▂▂▂
+                   5.52 ipc ( 79.96% cache)    1.01 branch misses
+          1.49k cycles   8.25k instructions    0.22 c-refs    0.04 c-misses
+
+dequal                       385.19 ns/iter 381.08 ns █                    
+                    (377.70 ns … 521.27 ns) 483.92 ns █                    
+                    (  0.09  b … 166.39  b)   0.83  b ██▂▁▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   5.55 ipc ( 80.64% cache)    1.01 branch misses
+          1.48k cycles   8.20k instructions    0.20 c-refs    0.04 c-misses
+
+lodash.isEqual                 3.52 µs/iter   3.54 µs        ▅█  ▅         
+                        (3.40 µs … 3.74 µs)   3.62 µs        ██▆██▃   ▃    
+                    (583.45  b … 898.58  b) 737.25  b █▁▁▁▁▁████████▁▄█▄▄▁▄
+                   3.43 ipc ( 99.63% cache)    7.07 branch misses
+         13.64k cycles  46.74k instructions  925.37 c-refs    3.44 c-misses
+
+summary
+  object-equals
+   2.42x faster than are-deeply-equal
+   2.69x faster than dequal
+   2.76x faster than fast-equals
+   24.6x faster than lodash.isEqual
+
+• Typed Array [size=4096]
+------------------------------------------- -------------------------------
+object-equals                683.49 ns/iter 689.57 ns  █                   
+                    (669.37 ns … 769.77 ns) 747.45 ns  █▃                  
+                    (202.21  b … 428.27  b) 209.02  b ███▅▃▄▄▃▃▂▂▂▂▂▁▁▂▂▁▁▁
+                   5.73 ipc ( 94.91% cache)    1.02 branch misses
+          2.62k cycles  15.02k instructions    8.43 c-refs    0.43 c-misses
+
+are-deeply-equal               2.49 µs/iter   2.50 µs   █                  
+                        (2.44 µs … 2.77 µs)   2.75 µs ▇▇█▂▂                
+                    (175.28  b … 184.48  b) 183.97  b █████▄▂▂▄▂▁▁▂▁▁▁▁▁▂▁▂
+                   5.92 ipc ( 94.58% cache)    1.04 branch misses
+          9.59k cycles  56.81k instructions   11.66 c-refs    0.63 c-misses
+
+fast-equals                    2.98 µs/iter   2.98 µs  █▅                  
+                        (2.94 µs … 3.17 µs)   3.15 µs ▂██                  
+                    (  0.09  b …   0.46  b)   0.10  b ███▅▄▁▅▁▁▂▁▅▁▁▂▁▂▁▂▁▄
+                   5.63 ipc ( 84.59% cache)    1.04 branch misses
+         11.50k cycles  64.73k instructions    2.55 c-refs    0.39 c-misses
+
+dequal                         2.97 µs/iter   2.99 µs  █▂▅                 
+                        (2.94 µs … 3.08 µs)   3.06 µs ▇███▂▂ ▂▇    ▂       
+                    (  0.09  b …   0.42  b)   0.10  b ██████▄██▇▇▁▇█▄▁▁▄▁▁▄
+                   5.66 ipc ( 85.03% cache)    1.04 branch misses
+         11.43k cycles  64.67k instructions    2.32 c-refs    0.35 c-misses
+
+lodash.isEqual                15.17 µs/iter  14.92 µs  █                   
+                     (14.44 µs … 171.50 µs)  23.37 µs  █                   
+                    (  1.07 kb … 220.80 kb)   1.26 kb ▆█▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   4.14 ipc ( 98.88% cache)   37.90 branch misses
+         59.72k cycles 247.25k instructions   1.75k c-refs   19.62 c-misses
+
+summary
+  object-equals
+   3.64x faster than are-deeply-equal
+   4.35x faster than dequal
+   4.37x faster than fast-equals
+   22.2x faster than lodash.isEqual
+
+• Typed Array [size=16386]
+------------------------------------------- -------------------------------
+object-equals                  2.54 µs/iter   2.55 µs  ▄▂█                 
+                        (2.48 µs … 2.76 µs)   2.71 µs ▃████                
+                    (160.31  b … 208.16  b) 207.22  b █████▇▇▅▅▇▁▅▁▁▃▁▁▁▅▁▃
+                   5.89 ipc ( 99.83% cache)    1.04 branch misses
+          9.73k cycles  57.31k instructions  509.41 c-refs    0.87 c-misses
+
+are-deeply-equal               9.71 µs/iter   9.72 µs   █                  
+                        (9.67 µs … 9.85 µs)   9.81 µs █ ██    █            
+                    (178.89  b … 184.48  b) 183.88  b █████▁▁▁█▁█▁▁▁▁▁▁▁▁▁█
+                   6.02 ipc ( 99.56% cache)    1.10 branch misses
+         37.53k cycles 225.87k instructions  396.65 c-refs    1.74 c-misses
+
+fast-equals                   11.90 µs/iter  11.90 µs    █                 
+                      (11.78 µs … 12.28 µs)  12.05 µs ▅ ▅█▅▅ ▅ ▅  ▅       ▅
+                    (  0.10  b …   0.10  b)   0.10  b █▁████▁█▁█▁▁█▁▁▁▁▁▁▁█
+                   5.63 ipc ( 99.65% cache)    1.15 branch misses
+         45.91k cycles 258.37k instructions  326.91 c-refs    1.13 c-misses
+
+dequal                        12.02 µs/iter  12.04 µs  █        █          
+                      (11.84 µs … 12.40 µs)  12.16 µs ▅█   ▅   ▅█  ▅   ▅  ▅
+                    (  0.10  b …   0.41  b)   0.12  b ██▁▁▁█▁▁▁██▁▁█▁▁▁█▁▁█
+                   5.57 ipc ( 99.57% cache)    1.12 branch misses
+         46.37k cycles 258.31k instructions  326.85 c-refs    1.40 c-misses
+
+lodash.isEqual                54.11 µs/iter  53.11 µs █                    
+                     (52.64 µs … 173.21 µs)  77.98 µs █                    
+                    (624.00  b … 180.76 kb)   1.47 kb █▃▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   4.48 ipc ( 97.91% cache)   40.75 branch misses
+        209.29k cycles 937.51k instructions   2.36k c-refs   49.34 c-misses
+
+summary
+  object-equals
+   3.83x faster than are-deeply-equal
+   4.69x faster than fast-equals
+   4.74x faster than dequal
+   21.34x faster than lodash.isEqual
+```
+
+</details>
+
+> [!NOTE]  
+> This table reflects web-safe performance and excludes `node.isDeepStrictEqual` for fairness. Node's implementation uses internal optimizations (e.g., `Buffer.compare`) that are not available in browser runtimes and would distort the comparison.
+
 ### Data View
+
+#### Runtime-specific
 
 | Library | 16 | 512 | 4096 | 16386 | Speed Range |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -2857,8 +3049,161 @@ summary
 
 </details>
 
+#### Web-safe
+
+| Library | 16 | 512 | 4096 | 16386 | Speed Range |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| object-equals | 12.31 ns | 92.20 ns | 669.83 ns | 3.00 µs | 1.00x (baseline) |
+| dequal | 19.21 ns | 387.72 ns | 3.00 µs | 12.05 µs | 1.56x-4.01x slower |
+| are-deeply-equal | 95.61 ns | 395.93 ns | 2.55 µs | 9.38 µs | 7.77x-3.12x slower |
+| lodash.isEqual | 3.85 µs | 5.41 µs | 17.13 µs | 56.60 µs | 312.74x-18.84x slower |
+
+<details>
+<summary>Full benchmark results with hardware counters</summary>
+
+```console
+clk: ~3.74 GHz
+cpu: AMD Ryzen 5 3600 6-Core Processor
+runtime: node 24.1.0 (x64-linux)
+
+benchmark                   avg (min … max) p75 / p99    (min … top 1%)
+------------------------------------------- -------------------------------
+• Data View [size=16]
+------------------------------------------- -------------------------------
+object-equals                 12.31 ns/iter  11.92 ns  █                   
+                      (11.65 ns … 44.38 ns)  19.22 ns  █                   
+                    (  0.10  b …  60.78  b)   0.18  b ▂█▃▂▂▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁
+                   4.85 ipc ( 93.48% cache)    0.01 branch misses
+          49.53 cycles  240.41 instructions    0.04 c-refs    0.00 c-misses
+
+are-deeply-equal              95.61 ns/iter 102.67 ns  █                   
+                     (82.14 ns … 197.50 ns) 151.91 ns  ██                  
+                    (227.23  b … 512.27  b) 392.22  b ▅██▇▃▃▅▇▃▂▂▁▂▂▂▂▂▂▁▁▁
+                   3.36 ipc ( 96.16% cache)    0.02 branch misses
+         368.19 cycles   1.24k instructions   13.10 c-refs    0.50 c-misses
+
+dequal                        19.21 ns/iter  18.54 ns  █                   
+                      (17.28 ns … 87.50 ns)  33.16 ns  █                   
+                    (  0.09  b …  60.44  b)   0.19  b ▅█▃▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   4.65 ipc ( 88.85% cache)    0.01 branch misses
+          73.70 cycles  342.64 instructions    0.04 c-refs    0.00 c-misses
+
+lodash.isEqual                 3.85 µs/iter   4.00 µs   ▂   ██▂▂▂    ▂     
+                        (3.55 µs … 4.25 µs)   4.19 µs ▅ █ ▅ █████▅   █▅▅   
+                    (  1.23 kb …   1.26 kb)   1.24 kb █▇█▁█▇██████▇▇▇███▁▇▇
+                   2.40 ipc ( 99.61% cache)   18.75 branch misses
+         14.67k cycles  35.28k instructions   1.75k c-refs    6.87 c-misses
+
+summary
+  object-equals
+   1.56x faster than dequal
+   7.77x faster than are-deeply-equal
+   312.74x faster than lodash.isEqual
+
+• Data View [size=512]
+------------------------------------------- -------------------------------
+object-equals                 92.20 ns/iter  91.83 ns  █                   
+                     (88.52 ns … 167.46 ns) 118.59 ns  █▄                  
+                    (  0.10  b …  96.13  b)   0.33  b ▁██▄▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   5.85 ipc ( 83.06% cache)    0.01 branch misses
+         353.95 cycles   2.07k instructions    0.09 c-refs    0.01 c-misses
+
+are-deeply-equal             395.93 ns/iter 397.61 ns      █               
+                    (370.88 ns … 570.94 ns) 457.62 ns      █▆              
+                    ( 88.98  b … 550.70  b) 392.18  b ▃▅▄▅▆██▆▃▂▂▂▁▁▁▁▁▂▁▁▁
+                   5.23 ipc ( 95.57% cache)    1.03 branch misses
+          1.54k cycles   8.05k instructions   13.68 c-refs    0.61 c-misses
+
+dequal                       387.72 ns/iter 388.30 ns    ██                
+                    (359.75 ns … 571.28 ns) 486.62 ns ▂▂ ██                
+                    (  0.09  b … 150.38  b)   0.81  b ██▄██▇▃▃▄▂▂▂▂▂▁▁▃▁▁▁▁
+                   4.81 ipc ( 76.94% cache)    1.01 branch misses
+          1.49k cycles   7.17k instructions    0.19 c-refs    0.04 c-misses
+
+lodash.isEqual                 5.41 µs/iter   5.44 µs   █                  
+                        (5.30 µs … 5.72 µs)   5.62 µs ▅ █   █              
+                    (  1.23 kb …   1.28 kb)   1.24 kb █▁█▅▅██▅█▅█▁▁▅▅▁▅▁▁▁▅
+                   3.01 ipc ( 99.55% cache)   19.10 branch misses
+         20.95k cycles  63.01k instructions   1.79k c-refs    8.07 c-misses
+
+summary
+  object-equals
+   4.21x faster than dequal
+   4.29x faster than are-deeply-equal
+   58.69x faster than lodash.isEqual
+
+• Data View [size=4096]
+------------------------------------------- -------------------------------
+object-equals                669.83 ns/iter 671.92 ns      █               
+                    (649.44 ns … 791.05 ns) 713.60 ns     ▇█▃              
+                    (  0.10  b … 128.21  b)   0.60  b ▂▅▅▅███▆▃▄▄▂▂▃▃▂▂▂▂▁▁
+                   5.94 ipc ( 82.84% cache)    1.02 branch misses
+          2.57k cycles  15.29k instructions    0.75 c-refs    0.13 c-misses
+
+are-deeply-equal               2.55 µs/iter   2.59 µs        █▂▂           
+                        (2.37 µs … 2.80 µs)   2.77 µs        ███           
+                    (383.32  b … 392.54  b) 392.01  b ▇▃▇▇▃▅▇████▇▅▅▃▁▁▅▃▅▇
+                   5.84 ipc ( 94.66% cache)    1.07 branch misses
+          9.83k cycles  57.35k instructions   21.57 c-refs    1.15 c-misses
+
+dequal                         3.00 µs/iter   3.01 µs  █                   
+                        (2.95 µs … 3.19 µs)   3.15 µs  █▅                  
+                    (  0.09  b …   0.42  b)   0.10  b ▇███▇▄▇▃▃▃▃▃▁▁▃▃▁▃▃▃▃
+                   4.92 ipc ( 81.89% cache)    1.04 branch misses
+         11.48k cycles  56.47k instructions    2.54 c-refs    0.46 c-misses
+
+lodash.isEqual                17.13 µs/iter  16.70 µs  █                   
+                     (15.99 µs … 178.07 µs)  27.33 µs  █                   
+                    (  1.59 kb … 226.95 kb)   1.79 kb ▇█▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   3.93 ipc ( 98.14% cache)   48.93 branch misses
+         67.14k cycles 263.69k instructions   2.81k c-refs   52.11 c-misses
+
+summary
+  object-equals
+   3.8x faster than are-deeply-equal
+   4.47x faster than dequal
+   25.57x faster than lodash.isEqual
+
+• Data View [size=16386]
+------------------------------------------- -------------------------------
+object-equals                  3.00 µs/iter   2.92 µs    █                 
+                      (2.56 µs … 219.61 µs)   4.80 µs    █                 
+                    (360.00  b … 319.79 kb) 394.16  b ▁▁▄█▁▁▁▁▂▁▁▁▁▁▁▁▁▁▁▁▁
+                   4.82 ipc ( 99.77% cache)   31.10 branch misses
+         12.84k cycles  61.96k instructions  749.95 c-refs    1.73 c-misses
+
+are-deeply-equal               9.38 µs/iter   9.39 µs   █                  
+                        (9.30 µs … 9.62 µs)   9.55 µs   █ █  █             
+                    (383.44  b … 392.54  b) 391.49  b ██████▁███▁▁▁▁▁▁▁▁▁▁█
+                   6.00 ipc ( 99.40% cache)    1.18 branch misses
+         37.75k cycles 226.40k instructions  487.18 c-refs    2.94 c-misses
+
+dequal                        12.05 µs/iter  11.93 µs    █                 
+                      (11.67 µs … 13.01 µs)  12.76 µs    █▅                
+                    (  0.10  b …   0.10  b)   0.10  b ▇▁▁██▇▁▇▁▁▁▁▁▁▁▁▁▁▁▁▇
+                   4.94 ipc ( 99.57% cache)    1.16 branch misses
+         45.68k cycles 225.53k instructions  293.91 c-refs    1.27 c-misses
+
+lodash.isEqual                56.60 µs/iter  55.11 µs █                    
+                     (54.30 µs … 184.11 µs)  97.29 µs █                    
+                    (  1.59 kb … 704.98 kb)   2.26 kb █▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   4.37 ipc ( 97.39% cache)   57.49 branch misses
+        218.74k cycles 955.06k instructions   3.36k c-refs   87.56 c-misses
+
+summary
+  object-equals
+   3.12x faster than are-deeply-equal
+   4.01x faster than dequal
+   18.84x faster than lodash.isEqual
+```
+
+</details>
+
+> [!NOTE]  
+> This table reflects web-safe performance and excludes `node.isDeepStrictEqual` for fairness. Node's implementation uses internal optimizations (e.g., `Buffer.compare`) that are not available in browser runtimes and would distort the comparison.
+
 > [!NOTE]
-> `fast-equals` is excluded from the test because it does not natively support DataView and returns misleading results despite executing without errors. This behavior could lead to incorrect conclusions about its performance or correctness.
+> `fast-equals` is also excluded from the both tests because it does not natively support DataView and returns misleading results despite executing without errors. This behavior could lead to incorrect conclusions about its performance or correctness.
 
 ## Running Benchmarks
 
@@ -2886,17 +3231,6 @@ npm run build
 ```
 
 This will generate the output in the `dist/` folder. Web and main builds are handled via custom rollup config and exposed under appropriate `exports` in `package.json`.
-
-## Web Environment Support
-
-If you're using this package in a browser or client-side environment, you can import the web-only variant:
-
-```js
-import { objectEquals } from '@observ33r/object-equals/web';
-```
-
-This excludes Node-specific optimizations such as Buffer, deepStrictEqual and runtime detection logic. 
-Ideal for client-side apps or SSR targets like Next.js, Astro, etc.
 
 ## Testing
 
@@ -2928,6 +3262,7 @@ or run individual tests:
 npx vitest run tests/objectEquals.test.js
 npx vitest run tests/objectEquals.lodash.test.js
 ```
+
 ## Contributing
 
 Feel free to open issues or submit pull requests on [GitHub](https://github.com/observ33r/object-equals).
