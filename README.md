@@ -179,7 +179,7 @@ runtime: node 24.1.0 (x64-linux)
 
 benchmark                   avg (min … max) p75 / p99    (min … top 1%)
 ------------------------------------------- -------------------------------
-• Big JSON Object
+• Big JSON Object (~1.2 MiB, deeply nested)
 ------------------------------------------- -------------------------------
 object-equals                483.52 µs/iter 484.03 µs  █                   
                     (466.96 µs … 704.74 µs) 664.33 µs  █▅                  
@@ -228,12 +228,12 @@ summary
 
 </details>
 
-> [!NOTE]
+> [!NOTE]  
 > The object is a deeply nested structure (depth: 17) containing objects, arrays, strings, booleans, numbers and nulls. It has a file size of 1.2 MiB, with a root size of 18 and nested sizes ranging from 0 to 21.
 
 ## React and Advanced benchmark
 
-> [!IMPORTANT]
+> [!IMPORTANT]  
 > Times for object sizes: 16, 512, 4096, 16386
 
 ### React elements
@@ -2316,7 +2316,7 @@ summary
 
 </details>
 
-> [!NOTE]
+> [!NOTE]  
 > `dequal` is excluded from the test because it returns an incorrect result. An issue has been opened on the official GitHub repository: [https://github.com/lukeed/dequal/issues/31](https://github.com/lukeed/dequal/issues/31).
 
 ### Shuffled nested Set with mixed primitive values
@@ -2469,10 +2469,10 @@ summary
 
 </details>
 
-> [!NOTE]
+> [!NOTE]  
 > `dequal` is excluded from the test because it returns an incorrect result. An issue has been opened on the official GitHub repository: [https://github.com/lukeed/dequal/issues/31](https://github.com/lukeed/dequal/issues/31).
 
-> [!NOTE]
+> [!NOTE]  
 > `node.isDeepStrictEqual` is excluded due to excessive memory usage, causing a "JavaScript heap out of memory" crash at size=4096 and beyond. This is likely due to inefficient handling of deeply nested, shuffled structures, leading to unsustainable memory demands (e.g., creating large temporary arrays during comparison). Increasing the heap limit (e.g., `--max-old-space-size=8192`) could mitigate this, but it compromises reproducibility across systems.
 
 ### Typed Array
@@ -3201,7 +3201,7 @@ summary
 > [!NOTE]  
 > This table reflects web-safe performance and excludes `node.isDeepStrictEqual` for fairness. Node's implementation uses internal optimizations (e.g., `Buffer.compare`) that are not available in browser runtimes and would distort the comparison.
 
-> [!NOTE]
+> [!NOTE]  
 > `fast-equals` is also excluded from the both tests because it does not natively support DataView and returns misleading results despite executing without errors. This behavior could lead to incorrect conclusions about its performance or correctness.
 
 ## Running Benchmarks
