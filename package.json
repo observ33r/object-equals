@@ -1,6 +1,6 @@
 {
   "name": "@observ33r/object-equals",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A fast, flexible and robust utility for deep equality comparison with type-specific logic and engine-aware design.",
   "type": "module",
   "main": "dist/object-equals.esm.js",
