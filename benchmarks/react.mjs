@@ -7,7 +7,7 @@ import { isDeepStrictEqual } from 'node:util';
 import { dequal } from 'dequal';
 import React from 'react';
 
-import { objectEquals } from '../dist/object-equals.esm.js';
+import { objectEquals } from '../dist/object-equals.node.esm.js';
 
 const sizes = [16, 512, 4096, 16386];
 

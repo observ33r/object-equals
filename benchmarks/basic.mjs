@@ -6,14 +6,14 @@ import { isDeepStrictEqual } from 'node:util';
 import { dequal } from 'dequal';
 
 import { getBigData } from './bigData.mjs';
-import { objectEquals } from '../dist/object-equals.esm.js';
+import { objectEquals } from '../dist/object-equals.node.esm.js';
 
 const isNode = typeof process === 'object'
     && typeof process.versions?.node === 'string'
     && typeof Deno === 'undefined'
     && typeof Bun === 'undefined';
 
-group('Big JSON Object', () => {
+group('Big JSON Object (~1.2 MiB, deeply nested)', () => {
     summary(() => {
         bench('object-equals', function* () {
             const target = getBigData();
