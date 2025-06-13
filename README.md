@@ -1,5 +1,4 @@
 [![npm](https://img.shields.io/npm/v/@observ33r/object-equals.svg)](https://www.npmjs.com/package/@observ33r/object-equals)
-[![JSR](https://jsr.io/badges/@observ33r/object-equals)](https://jsr.io/@observ33r/object-equals)
 [![Size](https://badgen.net/bundlephobia/minzip/@observ33r/object-equals)](https://bundlephobia.com/package/@observ33r/object-equals)
 [![License](https://img.shields.io/npm/l/@observ33r/object-equals.svg)](https://github.com/observ33r/object-equals/blob/main/LICENSE)
 
