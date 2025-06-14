@@ -5,6 +5,7 @@ import * as fastEquals from 'fast-equals';
 import isEqualLodash from 'lodash/isEqual.js';
 import { isDeepStrictEqual } from 'node:util';
 import { dequal } from 'dequal';
+import { isEqual as isEqualEStoolkit } from 'es-toolkit'
 import React from 'react';
 
 import { objectEquals } from '../dist/object-equals.node.esm.js';
@@ -55,6 +56,11 @@ sizes.forEach(size => {
                 const target = generateReactTree(size);
                 const source = generateReactTree(size);
                 yield () => isEqualLodash(target, source)
+            });
+            bench('es-toolkit.isEqual', function* () {
+                const target = generateReactTree(size);
+                const source = generateReactTree(size);
+                yield () => isEqualEStoolkit(target, source)
             });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {

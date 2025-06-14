@@ -4,6 +4,7 @@ import * as fastEquals from 'fast-equals';
 import isEqualLodash from 'lodash/isEqual.js';
 import { isDeepStrictEqual } from 'node:util';
 import { dequal } from 'dequal';
+import { isEqual as isEqualEStoolkit } from 'es-toolkit'
 
 import { getBigData } from './bigData.mjs';
 import { objectEquals } from '../dist/object-equals.node.esm.js';
@@ -39,6 +40,11 @@ group('Big JSON Object (~1.2 MiB, deeply nested)', () => {
             const target = getBigData();
             const source = getBigData();
             yield () => isEqualLodash(target, source)
+        });
+        bench('es-toolkit.isEqual', function* () {
+            const target = getBigData();
+            const source = getBigData();
+            yield () => isEqualEStoolkit(target, source)
         });
         if (isNode) {
             bench('node.isDeepStrictEqual', function* () {

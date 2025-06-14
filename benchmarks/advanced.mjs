@@ -4,6 +4,7 @@ import * as fastEquals from 'fast-equals';
 import isEqualLodash from 'lodash/isEqual.js';
 import { isDeepStrictEqual } from 'node:util';
 import { dequal } from 'dequal';
+import { isEqual as isEqualEStoolkit } from 'es-toolkit'
 
 import { objectGenerator } from '@observ33r/object-generator';
 import { objectEquals } from '../dist/object-equals.node.esm.js';
@@ -48,6 +49,11 @@ sizes.forEach(size => {
                 const source = objectGenerator({ prefix: 'lodash', size, valueTypes });
                 yield () => isEqualLodash(target, source);
             });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', size, valueTypes });
+                const source = objectGenerator({ prefix: 'es-toolkit', size, valueTypes });
+                yield () => isEqualEStoolkit(target, source);
+            });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', size, valueTypes });
@@ -86,6 +92,11 @@ sizes.forEach(size => {
                 const target = objectGenerator({ prefix: 'lodash', size, nestedSize, depth, valueTypes });
                 const source = objectGenerator({ prefix: 'lodash', size, nestedSize, depth, valueTypes });
                 yield () => isEqualLodash(target, source);
+            });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', size, nestedSize, depth, valueTypes });
+                const source = objectGenerator({ prefix: 'es-toolkit', size, nestedSize, depth, valueTypes });
+                yield () => isEqualEStoolkit(target, source);
             });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
@@ -126,6 +137,11 @@ sizes.forEach(size => {
                 const source = objectGenerator({ prefix: 'lodash', type: Array, size, valueTypes });
                 yield () => isEqualLodash(target, source);
             });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', type: Array, size, valueTypes });
+                const source = objectGenerator({ prefix: 'es-toolkit', type: Array, size, valueTypes });
+                yield () => isEqualEStoolkit(target, source);
+            });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Array, size, valueTypes });
@@ -164,6 +180,11 @@ sizes.forEach(size => {
                 const target = objectGenerator({ prefix: 'lodash', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
                 const source = objectGenerator({ prefix: 'lodash', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
                 yield () => isEqualLodash(target, source);
+            });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                const source = objectGenerator({ prefix: 'es-toolkit', type: Array, size, nestedSize, depth, valueTypes: [...valueTypes, Array] });
+                yield () => isEqualEStoolkit(target, source);
             });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
@@ -204,6 +225,11 @@ sizes.forEach(size => {
                 const source = objectGenerator({ prefix: 'lodash', type: Map, size, valueTypes });
                 yield () => isEqualLodash(target, source);
             });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', type: Map, size, valueTypes });
+                const source = objectGenerator({ prefix: 'es-toolkit', type: Map, size, valueTypes });
+                yield () => isEqualEStoolkit(target, source);
+            });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Map, size, valueTypes });
@@ -242,6 +268,11 @@ sizes.forEach(size => {
                 const target = objectGenerator({ prefix: 'lodash', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
                 const source = objectGenerator({ prefix: 'lodash', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
                 yield () => isEqualLodash(target, source);
+            });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                const source = objectGenerator({ prefix: 'es-toolkit', type: Map, size, nestedSize, depth, valueTypes: [...valueTypes, Map] });
+                yield () => isEqualEStoolkit(target, source);
             });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
@@ -282,6 +313,11 @@ sizes.forEach(size => {
                 const source = objectGenerator({ prefix: 'lodash', type: Set, size, valueTypes });
                 yield () => isEqualLodash(target, source);
             });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', type: Set, size, valueTypes });
+                const source = objectGenerator({ prefix: 'es-toolkit', type: Set, size, valueTypes });
+                yield () => isEqualEStoolkit(target, source);
+            });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Set, size, valueTypes });
@@ -321,6 +357,11 @@ sizes.forEach(size => {
                 const source = objectGenerator({ prefix: 'lodash', type: Set, size, valueTypes, shuffle: true, seed: 94 });
                 yield () => isEqualLodash(target, source);
             });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', type: Set, size, valueTypes, shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'es-toolkit', type: Set, size, valueTypes, shuffle: true, seed: 94 });
+                yield () => isEqualEStoolkit(target, source);
+            });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
                     const target = objectGenerator({ prefix: 'node', type: Set, size, valueTypes, shuffle: true, seed: 42 });
@@ -354,6 +395,11 @@ sizes.forEach(size => {
                 const target = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
                 const source = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
                 yield () => isEqualLodash(target, source);
+            });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                const source = objectGenerator({ prefix: 'es-toolkit', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set] });
+                yield () => isEqualEStoolkit(target, source);
             });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
@@ -389,6 +435,11 @@ sizes.forEach(size => {
                 const source = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
                 yield () => isEqualLodash(target, source);
             });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ prefix: 'es-toolkit', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42 });
+                const source = objectGenerator({ prefix: 'es-toolkit', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
+                yield () => isEqualEStoolkit(target, source);
+            });
         });
     });
 });
@@ -420,6 +471,11 @@ sizes.forEach(size => {
                 const target = objectGenerator({ type: Uint8Array, size });
                 const source = objectGenerator({ type: Uint8Array, size });
                 yield () => isEqualLodash(target, source);
+            });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ type: Uint8Array, size });
+                const source = objectGenerator({ type: Uint8Array, size });
+                yield () => isEqualEStoolkit(target, source);
             });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
@@ -461,6 +517,11 @@ sizes.forEach(size => {
                 const source = objectGenerator({ type: Uint8Array, size });
                 yield () => isEqualLodash(target, source);
             });
+            bench('es-toolkit.isEqual', function* () {
+                const target = objectGenerator({ type: Uint8Array, size });
+                const source = objectGenerator({ type: Uint8Array, size });
+                yield () => isEqualEStoolkit(target, source);
+            });
 
         });
     });
@@ -488,6 +549,11 @@ sizes.forEach(size => {
                 const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
                 const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
                 yield () => isEqualLodash(target, source);
+            });
+            bench('es-toolkit.isEqual', function* () {
+                const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                yield () => isEqualEStoolkit(target, source);
             });
             if (isNode) {
                 bench('node.isDeepStrictEqual', function* () {
@@ -522,6 +588,11 @@ sizes.forEach(size => {
                 const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
                 const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
                 yield () => isEqualLodash(target, source);
+            });
+            bench('es-toolkit.isEqual', function* () {
+                const target = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                const source = new DataView(objectGenerator({ type: Uint8Array, size }).buffer);
+                yield () => isEqualEStoolkit(target, source);
             });
         });
     });
