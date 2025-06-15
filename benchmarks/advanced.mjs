@@ -370,25 +370,32 @@ sizes.forEach(size => {
     group(`Shuffled nested Set with mixed primitive values [size=${size}]`, () => {
         summary(() => {
             bench('object-equals', function* () {
-                const target = objectGenerator({ prefix: 'object-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42 });
-                const source = objectGenerator({ prefix: 'object-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
+                const target = objectGenerator({ prefix: 'object-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42, globalIndex: false });
+                const source = objectGenerator({ prefix: 'object-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94, globalIndex: false });
                 yield () => objectEquals(target, source);
             });
             bench('are-deeply-equal', function* () {
-                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42 });
-                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
+                const target = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42, globalIndex: false });
+                const source = objectGenerator({ prefix: 'are-deeply-equal', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94, globalIndex: false });
                 yield () => areDeeplyEqual(target, source);
             });
             bench('fast-equals', function* () {
-                const target = objectGenerator({ prefix: 'fast-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42 });
-                const source = objectGenerator({ prefix: 'fast-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
+                const target = objectGenerator({ prefix: 'fast-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42, globalIndex: false });
+                const source = objectGenerator({ prefix: 'fast-equals', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94, globalIndex: false });
                 yield () => fastEquals.deepEqual(target, source);
             });
             bench('lodash.isEqual', function* () {
-                const target = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42 });
-                const source = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94 });
+                const target = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42, globalIndex: false });
+                const source = objectGenerator({ prefix: 'lodash', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94, globalIndex: false });
                 yield () => isEqualLodash(target, source);
             });
+            if (isNode) {
+                bench('node.isDeepStrictEqual', function* () {
+                    const target = objectGenerator({ prefix: 'node', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 42, globalIndex: false });
+                    const source = objectGenerator({ prefix: 'node', type: Set, size, nestedSize, depth, valueTypes: [...valueTypes, Set], shuffle: true, seed: 94, globalIndex: false });
+                    yield () => isDeepStrictEqual(target, source);
+                });
+            }
         });
     });
 });
