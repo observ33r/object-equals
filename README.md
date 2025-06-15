@@ -473,6 +473,9 @@ summary
 
 </details>
 
+> [!NOTE]  
+> The `react` option is designed to support React elements comparison, including props that contain inline functions (e.g. `onClick: () => ...`). Most libraries fail such comparisons due to referential inequality. For benchmarking fairness, all comparisons use structurally equivalent trees without inline functions.
+
 ### Object with mixed primitive values
 
 | Library | 16 | 512 | 4096 | 16386 | Speed Range |
