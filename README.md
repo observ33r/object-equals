@@ -2326,10 +2326,11 @@ summary
 
 | Library | 16 | 512 | 4096 | 16386 | Speed Range |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| object-equals | 100.58 ns | 57.24 ns | 22.42 ns | 27.96 ns | 1.00x (baseline) |
-| are-deeply-equal | 376.08 ns | 6.39 µs | 82.78 ns | 91.76 ns | 3.74x-3.28x slower |
-| fast-equals | 1.23 µs | 164.83 µs | 102.12 µs | 214.80 µs | 12.28x-7681.37x slower |
-| lodash.isEqual | 48.76 µs | 3.33 ms | 2.02 ms | 4.37 ms | 484.76x-156377.58x slower |
+| object-equals | 5.16 µs | 266.59 µs | 2.37 ms | 12.41 ms | 1.00x (baseline) |
+| are-deeply-equal | 11.21 µs | 754.99 µs | 24.21 ms | 345.58 ms | 2.17x-27.85x slower |
+| node.isDeepStrictEqual | 11.28 µs | 422.36 µs | 3.54 ms | 18.47 ms | 2.19x-1.49x slower |
+| fast-equals | 20.27 µs | 1.44 ms | 48.39 ms | 795.07 ms | 3.93x-64.08x slower |
+| lodash.isEqual | 164.02 µs | 14.83 ms | 657.67 ms | 10.06 s | 31.80x-811.19x slower |
 
 <details>
 <summary>Full benchmark results with hardware counters</summary>
@@ -2337,146 +2338,171 @@ summary
 ```console
 clk: ~3.69 GHz
 cpu: AMD Ryzen 5 3600 6-Core Processor
-runtime: node 24.1.0 (x64-linux)
+runtime: node 24.2.0 (x64-linux)
 
 benchmark                   avg (min … max) p75 / p99    (min … top 1%)
 ------------------------------------------- -------------------------------
 • Shuffled nested Set with mixed primitive values [size=16]
 ------------------------------------------- -------------------------------
-object-equals                100.58 ns/iter 101.76 ns   █                  
-                     (93.11 ns … 201.29 ns) 144.79 ns  ██▂▂                
-                    ( 48.42  b … 551.49  b) 185.53  b ▃████▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-                   2.92 ipc ( 96.34% cache)    0.02 branch misses
-         401.79 cycles   1.17k instructions    6.21 c-refs    0.23 c-misses
+object-equals                  5.16 µs/iter   5.25 µs  ▄       █           
+                        (4.81 µs … 5.85 µs)   5.61 µs ██       █▅▅         
+                    (  3.38 kb …   8.54 kb)   3.58 kb ██▅▅▁▁▁▁▁███▁▁▅▁▅▁▅▅█
+                   3.26 ipc ( 99.06% cache)   13.93 branch misses
+         20.06k cycles  65.34k instructions  742.26 c-refs    6.95 c-misses
 
-are-deeply-equal             376.08 ns/iter 375.07 ns  █                   
-                    (365.50 ns … 481.66 ns) 429.86 ns  █▅                  
-                    (722.22  b …   1.51 kb) 884.97  b ▃██▄▄▂▂▂▂▁▁▁▁▁▁▂▂▂▁▁▁
-                   3.14 ipc ( 95.55% cache)    0.05 branch misses
-          1.54k cycles   4.82k instructions   30.99 c-refs    1.38 c-misses
+are-deeply-equal              11.21 µs/iter  11.19 µs    █                 
+                     (10.23 µs … 232.65 µs)  16.03 µs    █                 
+                    (  2.48 kb … 343.46 kb)  21.66 kb ▂█▃█▅▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   2.68 ipc ( 98.79% cache)   88.86 branch misses
+         45.29k cycles 121.34k instructions   2.24k c-refs   26.96 c-misses
 
-fast-equals                    1.23 µs/iter   1.25 µs  █                   
-                        (1.20 µs … 1.41 µs)   1.40 µs  █▆ ▂ ▂              
-                    (272.15  b …   2.62 kb) 615.68  b ▅██████▇▃▂▂▂▁▁▁▁▁▁▁▁▂
-                   4.04 ipc ( 94.90% cache)    4.57 branch misses
-          5.07k cycles  20.46k instructions   22.32 c-refs    1.14 c-misses
+fast-equals                   20.27 µs/iter  20.15 µs  █▅                  
+                      (19.66 µs … 83.54 µs)  24.84 µs  ██                  
+                    ( 96.00  b … 227.70 kb)   3.14 kb ▃██▃▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   3.50 ipc ( 99.17% cache)  287.66 branch misses
+         84.51k cycles 295.89k instructions   1.22k c-refs   10.18 c-misses
 
-lodash.isEqual                48.76 µs/iter  47.55 µs        █             
-                     (30.12 µs … 256.81 µs)  75.06 µs        █▄            
-                    (  2.01 kb … 808.71 kb)  15.37 kb ▁▁▁▁▁▁▂██▂▃▃▃▁▁▁▁▁▁▁▁
-                   2.48 ipc ( 99.05% cache)  313.22 branch misses
-        186.47k cycles 461.66k instructions  16.28k c-refs  154.96 c-misses
+lodash.isEqual               164.02 µs/iter 161.89 µs   █                  
+                    (148.51 µs … 674.77 µs) 232.41 µs   █                  
+                    ( 33.25 kb …   1.25 mb)  69.56 kb ▁▁█▇▃▃▁▁▁▁▁▂▂▁▁▁▁▁▁▁▁
+                   2.50 ipc ( 99.03% cache)   1.54k branch misses
+        655.13k cycles   1.64M instructions  55.30k c-refs  535.23 c-misses
+
+node.isDeepStrictEqual        11.28 µs/iter  11.35 µs  █                   
+                     (10.35 µs … 219.57 µs)  15.92 µs  █ █▅                
+                    (  1.84 kb … 251.45 kb)   6.43 kb ▃█▂██▂▂▁▁▁▂▂▁▁▁▁▁▁▁▁▁
+                   2.70 ipc ( 99.37% cache)   73.75 branch misses
+         45.70k cycles 123.30k instructions   1.87k c-refs   11.76 c-misses
 
 summary
   object-equals
-   3.74x faster than are-deeply-equal
-   12.28x faster than fast-equals
-   484.76x faster than lodash.isEqual
+   2.17x faster than are-deeply-equal
+   2.19x faster than node.isDeepStrictEqual
+   3.93x faster than fast-equals
+   31.8x faster than lodash.isEqual
 
 • Shuffled nested Set with mixed primitive values [size=512]
 ------------------------------------------- -------------------------------
-object-equals                 57.24 ns/iter  58.14 ns █                    
-                     (53.36 ns … 120.19 ns) 100.31 ns ██                   
-                    ( 44.34  b … 264.18  b) 184.16  b ██▄▇▅▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-                   3.90 ipc ( 96.66% cache)    0.01 branch misses
-         219.01 cycles  853.20 instructions    6.10 c-refs    0.20 c-misses
+object-equals                266.59 µs/iter 267.41 µs  █                   
+                    (259.31 µs … 479.78 µs) 333.08 µs  █▄                  
+                    ( 21.58 kb … 389.81 kb) 102.39 kb ▅██▆▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   1.94 ipc ( 73.26% cache)  11.31k branch misses
+          1.03M cycles   1.99M instructions  43.41k c-refs  11.61k c-misses
 
-are-deeply-equal               6.39 µs/iter   6.63 µs  █                   
-                        (6.08 µs … 7.02 µs)   6.92 µs ▇█▇   ▂              
-                    (  6.43 kb …   6.56 kb)   6.56 kb ███▆▁▁█▁▁▁▁▆▆▆▆▆▆▆▁▁▆
-                   3.18 ipc ( 94.89% cache)   87.40 branch misses
-         25.11k cycles  79.74k instructions   1.06k c-refs   54.21 c-misses
+are-deeply-equal             754.99 µs/iter 753.72 µs   █                  
+                    (735.32 µs … 993.22 µs) 904.08 µs   █                  
+                    (118.69 kb … 683.71 kb) 664.43 kb ▂██▄▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+                   2.25 ipc ( 82.15% cache)  24.91k branch misses
+          2.91M cycles   6.54M instructions 101.78k c-refs  18.17k c-misses
 
-fast-equals                  164.83 µs/iter 164.15 µs  █                   
-                    (160.84 µs … 370.29 µs) 195.18 µs  █                   
-                    ( 20.26 kb … 299.20 kb)  79.04 kb ▅█▅▃▄▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
-                   3.17 ipc ( 85.20% cache)   4.78k branch misses
-        636.42k cycles   2.02M instructions  25.19k c-refs   3.73k c-misses
+fast-equals                    1.44 ms/iter   1.44 ms       █              
+                        (1.40 ms … 1.52 ms)   1.50 ms      ██              
+                    ( 78.07 kb …  80.19 kb)  78.11 kb ▃▄▄▄▆███▃▂▂▂▃▂▃▄▃▄▄▂▁
+                   2.97 ipc ( 90.99% cache)  61.34k branch misses
+          5.80M cycles  17.25M instructions  70.79k c-refs   6.38k c-misses
 
-lodash.isEqual                 3.33 ms/iter   3.36 ms      ▃█              
-                        (3.07 ms … 3.86 ms)   3.79 ms  ▂   ██▃             
-                    (170.84 kb …   1.91 mb)   1.25 mb ▄█▆▄▄███▄▃▂▇▁▂▁▂▃▄▁▃▂
-                   2.52 ipc ( 98.94% cache)  23.68k branch misses
-         12.95M cycles  32.62M instructions   1.03M c-refs  10.95k c-misses
+lodash.isEqual                14.83 ms/iter  14.76 ms  █                   
+                      (14.20 ms … 17.45 ms)  17.16 ms  █                   
+                    (  2.27 mb …   3.51 mb)   2.94 mb ███▅▅▁▁▄▁▂▁▁▂▂▁▄▁▁▂▁▂
+                   2.49 ipc ( 99.10% cache) 128.46k branch misses
+         59.66M cycles 148.65M instructions   3.87M c-refs  34.85k c-misses
+
+node.isDeepStrictEqual       422.36 µs/iter 423.31 µs   █▄                 
+                    (411.23 µs … 614.32 µs) 479.95 µs  ▅██                 
+                    ( 42.20 kb … 569.71 kb) 186.00 kb ▃████▅▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁
+                   2.20 ipc ( 84.56% cache)  11.82k branch misses
+          1.73M cycles   3.80M instructions  50.65k c-refs   7.82k c-misses
 
 summary
   object-equals
-   111.59x faster than are-deeply-equal
-   2879.69x faster than fast-equals
-   58094.17x faster than lodash.isEqual
+   1.58x faster than node.isDeepStrictEqual
+   2.83x faster than are-deeply-equal
+   5.39x faster than fast-equals
+   55.64x faster than lodash.isEqual
 
 • Shuffled nested Set with mixed primitive values [size=4096]
 ------------------------------------------- -------------------------------
-object-equals                 22.42 ns/iter  22.04 ns  █                   
-                      (21.17 ns … 73.73 ns)  33.35 ns  █                   
-                    (  2.95  b …  64.11  b)  32.17  b ▅█▃▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-                   4.39 ipc ( 97.28% cache)    0.01 branch misses
-          91.08 cycles  399.64 instructions    1.11 c-refs    0.03 c-misses
+object-equals                  2.37 ms/iter   2.39 ms  █                   
+                        (2.26 ms … 3.27 ms)   3.07 ms ▅█                   
+                    (832.01 kb … 841.77 kb) 832.60 kb ██▅▅▃▄▃▃▂▂▂▂▁▁▁▁▁▁▁▁▁
+                   1.84 ipc ( 79.03% cache) 102.33k branch misses
+          8.90M cycles  16.38M instructions 360.21k c-refs  75.54k c-misses
 
-are-deeply-equal              82.78 ns/iter  81.24 ns  ▃█                  
-                     (74.46 ns … 237.90 ns) 135.23 ns ▂██                  
-                    (139.15  b … 686.38  b) 313.65  b ███▄▂▂▄▃▂▂▁▁▁▁▁▁▁▁▁▁▁
-                   2.67 ipc ( 96.19% cache)    0.02 branch misses
-         316.74 cycles  845.94 instructions   10.43 c-refs    0.40 c-misses
+are-deeply-equal              24.21 ms/iter  24.34 ms      █      ██       
+                      (23.88 ms … 24.71 ms)  24.59 ms █  █ █    █ ██ █     
+                    (  5.17 mb …   5.22 mb)   5.21 mb ██████▁▁▁████████▁▁▁█
+                   2.39 ipc ( 90.17% cache) 835.71k branch misses
+         92.57M cycles 221.18M instructions   3.64M c-refs 357.60k c-misses
 
-fast-equals                  102.12 µs/iter 101.91 µs   █                  
-                     (99.05 µs … 237.63 µs) 114.99 µs  ▄█▅                 
-                    ( 14.38 kb … 184.46 kb)  25.62 kb ▁███▇▃▂▂▃▃▂▂▁▁▁▁▁▁▁▁▁
-                   2.74 ipc ( 72.42% cache)   3.63k branch misses
-        416.90k cycles   1.14M instructions  19.22k c-refs   5.30k c-misses
+fast-equals                   48.39 ms/iter  48.79 ms   █                 █
+                      (47.86 ms … 49.21 ms)  48.88 ms ▅ █▅  ▅ ▅ ▅       ▅ █
+                    (624.15 kb … 636.55 kb) 625.03 kb █▁██▁▁█▁█▁█▁▁▁▁▁▁▁█▁█
+                   3.08 ipc ( 97.85% cache)   2.05M branch misses
+        198.47M cycles 610.36M instructions   3.84M c-refs  82.43k c-misses
 
-lodash.isEqual                 2.02 ms/iter   2.01 ms  ▅█                  
-                        (1.93 ms … 2.80 ms)   2.41 ms  ██                  
-                    (106.24 kb … 900.91 kb) 236.01 kb ▂██▇▃▂▂▂▃▂▂▂▁▁▁▁▁▂▁▁▁
-                   2.63 ipc ( 95.99% cache)  16.03k branch misses
-          8.13M cycles  21.39M instructions 370.68k c-refs  14.88k c-misses
+lodash.isEqual               657.67 ms/iter 670.83 ms  █   █               
+                    (635.76 ms … 701.90 ms) 681.33 ms ▅█▅ ▅█       ▅ ▅   ▅▅
+                    ( 14.27 mb …  14.39 mb)  14.29 mb ███▁██▁▁▁▁▁▁▁█▁█▁▁▁██
+                   2.58 ipc ( 99.05% cache)   4.49M branch misses
+          2.63G cycles   6.79G instructions 128.98M c-refs   1.23M c-misses
+
+node.isDeepStrictEqual         3.54 ms/iter   3.56 ms  █▃                  
+                        (3.45 ms … 4.30 ms)   3.89 ms  ██                  
+                    (  1.46 mb …   1.46 mb)   1.46 mb ▅██▅█▇▅▅▂▃▂▂▁▂▃▁▁▁▂▁▁
+                   2.11 ipc ( 82.65% cache) 102.45k branch misses
+         14.40M cycles  30.46M instructions 430.84k c-refs  74.77k c-misses
 
 summary
   object-equals
-   3.69x faster than are-deeply-equal
-   4555.62x faster than fast-equals
-   90014.27x faster than lodash.isEqual
+   1.49x faster than node.isDeepStrictEqual
+   10.22x faster than are-deeply-equal
+   20.43x faster than fast-equals
+   277.64x faster than lodash.isEqual
 
 • Shuffled nested Set with mixed primitive values [size=16386]
 ------------------------------------------- -------------------------------
-object-equals                 27.96 ns/iter  28.02 ns █                    
-                      (26.45 ns … 84.93 ns)  42.05 ns █                    
-                    (  2.85  b …  88.03  b)  32.09  b █▇█▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-                   4.15 ipc ( 97.17% cache)    0.01 branch misses
-         111.49 cycles  462.96 instructions    1.14 c-refs    0.03 c-misses
+object-equals                 12.41 ms/iter  12.47 ms  █     ▄▄▄           
+                      (12.21 ms … 12.73 ms)  12.71 ms  ███▅  ████   ▅      
+                    (  3.23 mb …   3.26 mb)   3.25 mb ▅█████▅████▁███▅▅▁▅▅▅
+                   1.31 ipc ( 81.00% cache) 440.70k branch misses
+         50.74M cycles  66.23M instructions   1.54M c-refs 291.75k c-misses
 
-are-deeply-equal              91.76 ns/iter  90.04 ns  █                   
-                     (84.32 ns … 167.22 ns) 144.51 ns  █▇                  
-                    (162.77  b … 424.11  b) 312.05  b ▁██▃▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁
-                   2.68 ipc ( 95.95% cache)    0.02 branch misses
-         347.95 cycles  933.61 instructions   10.57 c-refs    0.43 c-misses
+are-deeply-equal             345.58 ms/iter 354.02 ms  █                   
+                    (336.31 ms … 356.82 ms) 356.20 ms ██                   
+                    ( 20.78 mb …  20.88 mb)  20.81 mb ███▁▁▁▁▁▁▁▁▁█▁▁▁▁████
+                   2.29 ipc ( 84.94% cache)  15.16M branch misses
+          1.37G cycles   3.14G instructions  58.21M c-refs   8.77M c-misses
 
-fast-equals                  214.80 µs/iter 215.32 µs  █                   
-                    (207.88 µs … 420.16 µs) 265.76 µs  █                   
-                    ( 12.84 kb … 479.66 kb) 128.48 kb ▅█▇▆▄▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁
-                   2.94 ipc ( 81.73% cache)   8.39k branch misses
-        869.27k cycles   2.55M instructions  31.26k c-refs   5.71k c-misses
+fast-equals                  795.07 ms/iter 814.29 ms   █            █     
+                    (764.57 ms … 824.97 ms) 821.71 ms ▅ █▅ ▅  ▅      █ ▅ ▅▅
+                    (  2.44 mb …   2.50 mb)   2.49 mb █▁██▁█▁▁█▁▁▁▁▁▁█▁█▁██
+                   2.87 ipc ( 85.00% cache)  35.48M branch misses
+          3.13G cycles   8.98G instructions 109.42M c-refs  16.41M c-misses
 
-lodash.isEqual                 4.37 ms/iter   4.39 ms  █                   
-                        (4.26 ms … 5.01 ms)   4.98 ms ▃██▂                 
-                    (270.38 kb … 721.99 kb) 637.70 kb █████▅▄▂▁▁▂▃▂▁▃▂▂▁▁▁▂
-                   2.65 ipc ( 97.83% cache)  35.22k branch misses
-         17.77M cycles  47.15M instructions 754.18k c-refs  16.40k c-misses
+lodash.isEqual                 10.06 s/iter   10.07 s █                    
+                         (9.82 s … 11.12 s)   10.29 s █     █              
+                    ( 56.16 mb …  56.34 mb)  56.25 mb ███▁▁██▁▁▁▁█▁▁▁▁█▁▁▁█
+                   2.57 ipc ( 98.52% cache)  65.98M branch misses
+         40.46G cycles 103.93G instructions   2.11G c-refs  31.28M c-misses
+
+node.isDeepStrictEqual        18.47 ms/iter  18.52 ms     █                
+                      (18.31 ms … 18.82 ms)  18.78 ms  ▅ ██ ▅  ▅           
+                    (  5.82 mb …   5.84 mb)   5.82 mb █████▅████▁▁▁▅▅▅▅▅▁▁▅
+                   1.61 ipc ( 76.22% cache) 389.73k branch misses
+         75.48M cycles 121.31M instructions   1.88M c-refs 448.25k c-misses
 
 summary
   object-equals
-   3.28x faster than are-deeply-equal
-   7681.37x faster than fast-equals
-   156377.58x faster than lodash.isEqual
+   1.49x faster than node.isDeepStrictEqual
+   27.85x faster than are-deeply-equal
+   64.08x faster than fast-equals
+   811.19x faster than lodash.isEqual
 ```
 
 </details>
 
 > [!NOTE]  
 > `dequal` is excluded from the test because it returns an incorrect result. An issue has been opened on the official GitHub repository: [https://github.com/lukeed/dequal/issues/31](https://github.com/lukeed/dequal/issues/31).
-
-> [!NOTE]  
-> `node.isDeepStrictEqual` is excluded due to excessive memory usage, causing a "JavaScript heap out of memory" crash at size=4096 and beyond. This is likely due to inefficient handling of deeply nested, shuffled structures, leading to unsustainable memory demands (e.g., creating large temporary arrays during comparison). Increasing the heap limit (e.g., `--max-old-space-size=8192`) could mitigate this, but it compromises reproducibility across systems.
 
 ### Typed Array
 
