@@ -165,7 +165,7 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                         return true;
                     const sourceValues = [];
                     for (const sourceValue of source.values())
-                        if (typeof sourceValue === 'object')
+                        if (sourceValue !== null && typeof sourceValue === 'object')
                             sourceValues.push(sourceValue);
                     if (targetLength !== sourceValues.length)
                         return false;
