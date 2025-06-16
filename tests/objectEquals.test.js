@@ -190,4 +190,17 @@ describe('objectEquals', () => {
 
     });
 
+    test('Should detect asymmetric circular structures as not equal', () => {
+	
+        const arr1 = [[[]]];
+        const arr2 = [];
+        
+        arr1[0][0][0] = arr2
+        arr2[0] = arr1;
+    
+        expect(objectEquals(arr1, arr2, { circular: true })).toBe(false);
+        expect(objectEquals(arr2, arr1, { circular: true })).toBe(false);
+        
+    });
+
 });
