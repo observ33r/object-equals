@@ -2894,7 +2894,7 @@ summary
 </details>
 
 > [!NOTE]  
-> This table reflects web-safe performance and excludes `node.isDeepStrictEqual` for fairness. Node's implementation uses internal optimizations (e.g., `Buffer.compare`) that are not available in browser runtimes and would distort the comparison.
+> This table reflects `web-safe` operation and for fairness, excludes `node.isDeepStrictEqual`, which is not available in browser runtimes and would distort the comparison. `object-equals` also leverages `Buffer.compare` internally when is available, but gracefully falls back to cross-platform logic in web to ensure consistent and deterministic results.
 
 ### Data View
 
@@ -3228,7 +3228,7 @@ summary
 </details>
 
 > [!NOTE]  
-> This table reflects web-safe performance and excludes `node.isDeepStrictEqual` for fairness. Node's implementation uses internal optimizations (e.g., `Buffer.compare`) that are not available in browser runtimes and would distort the comparison.
+> This table reflects `web-safe` operation and for fairness, excludes `node.isDeepStrictEqual`, which is not available in browser runtimes and would distort the comparison. `object-equals` also leverages `Buffer.compare` internally when is available, but gracefully falls back to cross-platform logic in web to ensure consistent and deterministic results.
 
 > [!NOTE]  
 > `fast-equals` is also excluded from the both tests because it does not natively support DataView and returns misleading results despite executing without errors. This behavior could lead to incorrect conclusions about its performance or correctness.
@@ -3258,7 +3258,7 @@ To build package from source code, run:
 npm run build
 ```
 
-This will generate the output in the `dist/` folder. Web and main builds are handled via custom rollup config and exposed under appropriate `exports` in `package.json`.
+This will generate the output in the `dist/` folder. Main (web-safe) and node (runtime-specific) builds are handled via custom rollup config and exposed under appropriate `exports` in `package.json`.
 
 ## Testing
 
