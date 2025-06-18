@@ -401,6 +401,69 @@ sizes.forEach(size => {
 });
 
 sizes.forEach(size => {
+    group(`Array Buffer [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ type: Uint8Array, size }).buffer;
+                const source = objectGenerator({ type: Uint8Array, size }).buffer;
+                yield () => objectEquals(target, source);
+            });
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ type: Uint8Array, size }).buffer;
+                const source = objectGenerator({ type: Uint8Array, size }).buffer;
+                yield () => areDeeplyEqual(target, source);
+            });
+            bench('dequal', function* () {
+                const target = objectGenerator({ type: Uint8Array, size }).buffer;
+                const source = objectGenerator({ type: Uint8Array, size }).buffer;
+                yield () => dequal(target, source);
+            });
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ type: Uint8Array, size }).buffer;
+                const source = objectGenerator({ type: Uint8Array, size }).buffer;
+                yield () => isEqualLodash(target, source);
+            });
+            if (isNode) {
+                bench('node.isDeepStrictEqual', function* () {
+                    const target = objectGenerator({ type: Uint8Array, size }).buffer;
+                    const source = objectGenerator({ type: Uint8Array, size }).buffer;
+                    yield () => isDeepStrictEqual(target, source);
+                });
+            }
+        });
+    });
+});
+
+
+sizes.forEach(size => {
+    group(`Array Buffer (web-safe) [size=${size}]`, () => {
+        summary(() => {
+            bench('object-equals', function* () {
+                const target = objectGenerator({ type: Uint8Array, size }).buffer;
+                const source = objectGenerator({ type: Uint8Array, size }).buffer;
+                yield () => objectEqualsWebSafe(target, source);
+            });
+            bench('are-deeply-equal', function* () {
+                const target = objectGenerator({ type: Uint8Array, size }).buffer;
+                const source = objectGenerator({ type: Uint8Array, size }).buffer;
+                yield () => areDeeplyEqual(target, source);
+            });
+            bench('dequal', function* () {
+                const target = objectGenerator({ type: Uint8Array, size }).buffer;
+                const source = objectGenerator({ type: Uint8Array, size }).buffer;
+                yield () => dequal(target, source);
+            });
+            bench('lodash.isEqual', function* () {
+                const target = objectGenerator({ type: Uint8Array, size }).buffer;
+                const source = objectGenerator({ type: Uint8Array, size }).buffer;
+                yield () => isEqualLodash(target, source);
+            });
+
+        });
+    });
+});
+
+sizes.forEach(size => {
     group(`Typed Array [size=${size}]`, () => {
         summary(() => {
             bench('object-equals', function* () {
