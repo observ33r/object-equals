@@ -77,7 +77,7 @@ describe('objectEquals', () => {
         expect(objectEquals(typedArr1, typedArr2)).toBe(true);
 
     });
-    
+
     test('DataView comparison', () => {
 
         const dataView1 = new DataView(new ArrayBuffer(4)).setInt32(0, 42);
@@ -86,7 +86,7 @@ describe('objectEquals', () => {
         expect(objectEquals(dataView1, dataView2)).toBe(true);
 
     });
-    
+
     test('Date comparison', () => {
 
         const date1 = new Date('2020-01-01');
@@ -98,13 +98,13 @@ describe('objectEquals', () => {
 
     test('Invalid Date comparison', () => {
 
-        const d1 = new Date('invalid');
-        const d2 = new Date('invalid');
+        const date1 = new Date('invalid');
+        const date2 = new Date('invalid');
 
-        expect(objectEquals(d1, d2)).toBe(true);
+        expect(objectEquals(date1, date2)).toBe(true);
 
     });
-    
+
     test('RegExp comparison', () => {
 
         const regexp1 = /abc/g;
@@ -116,7 +116,7 @@ describe('objectEquals', () => {
         expect(objectEquals(regexp1, regexp2)).toBe(true);
 
     });
-    
+
     test('BigInt comparison', () => {
 
         const bigInt1 = BigInt(42);
@@ -125,7 +125,7 @@ describe('objectEquals', () => {
         expect(objectEquals(bigInt1, bigInt2)).toBe(true);
 
     });
-    
+
     test('NaN comparison', () => {
 
         expect(objectEquals(NaN, NaN)).toBe(true);
@@ -191,15 +191,24 @@ describe('objectEquals', () => {
     });
 
     test('Should detect asymmetric circular structures as not equal', () => {
-	
+
         const arr1 = [[[]]];
         const arr2 = [];
-        
+
         arr1[0][0][0] = arr2
         arr2[0] = arr1;
-    
+
         expect(objectEquals(arr1, arr2, { circular: true })).toBe(false);
         expect(objectEquals(arr2, arr1, { circular: true })).toBe(false);
+
+    });
+
+    test('Compares unaligned TypedArrays without throwing (fallback to bytes)', () => {
+	
+        const typedArr1 = new Uint8Array(new ArrayBuffer(1030), 1, 1024);
+        const typedArr2 = new Uint8Array(new ArrayBuffer(1030), 2, 1024);
+
+        expect(objectEquals(typedArr1, typedArr2)).toBe(true);
         
     });
 
