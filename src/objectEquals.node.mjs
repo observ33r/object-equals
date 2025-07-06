@@ -197,18 +197,17 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                             return false;
                         targetValues.push(targetValue);
                     }
-                    const targetLength = targetValues.length;
-                    if (targetLength === 0)
+                    if (targetValues.length === 0)
                         return true;
                     const sourceValues = [];
                     for (const sourceValue of source.values())
                         if (sourceValue !== null && typeof sourceValue === 'object')
                             sourceValues.push(sourceValue);
-                    if (targetLength !== sourceValues.length)
+                    if (targetValues.length !== sourceValues.length)
                         return false;
-                    if (targetLength === 1)
+                    if (targetValues.length === 1)
                         return objectEqualsCore(targetValues[0], sourceValues[0], circular, crossrealm, react, symbols, fallback, cache);
-                    lo: for (let targetIdx = targetLength - 1; targetIdx >= 0; targetIdx--) {
+                    lo: for (let targetIdx = targetValues.length - 1; targetIdx >= 0; targetIdx--) {
                         for (let sourceIdx = sourceValues.length - 1; sourceIdx >= 0; sourceIdx--) {
                             if (objectEqualsCore(targetValues[targetIdx], sourceValues[sourceIdx], circular, crossrealm, react, symbols, fallback, cache)) {
                                 spliceArray.call(sourceValues, sourceIdx, 1);
