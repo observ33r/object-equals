@@ -15,7 +15,7 @@ const isJSC = (globalThis.$?.IsHTMLDDA !== undefined)
 export function objectEqualsCore(target, source, circular, crossrealm, react, symbols, fallback, cache) {
     if (typeof target === 'object' && typeof source === 'object') {
         if (!crossrealm) {
-            if (target == null || source == null)
+            if (target === null || source === null)
                 return target === source;
             var tor = target.constructor;
             if (tor !== source.constructor 
