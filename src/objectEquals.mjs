@@ -246,7 +246,7 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
         }
     }
     if (react && typeof target === 'function' && typeof source === 'function')
-        return true;
+        return target.toString() === source.toString();
     return target === source
         || target !== target && source !== source;
 }
