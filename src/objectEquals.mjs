@@ -18,10 +18,12 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
             if (target === null || source === null)
                 return target === source;
             var tor = target.constructor;
-            if (tor !== source.constructor 
-                && !hasOwnProperty.call(target, 'constructor') 
-                && !hasOwnProperty.call(source, 'constructor'))
-                    return false;
+            if (tor !== source.constructor) {
+                if (!hasOwnProperty.call(target, 'constructor')
+                    && !hasOwnProperty.call(source, 'constructor'))
+                        return false;
+                tor = undefined;
+            }
         }
         if (react && target.$$typeof === REACT_ELEMENT_TYPE && source.$$typeof === REACT_ELEMENT_TYPE)
             return target.type === source.type 
