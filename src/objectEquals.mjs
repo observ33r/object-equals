@@ -121,18 +121,20 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                     const targetLength = target.length;
                     if (targetLength !== source.length)
                         return false;
+                    const targetOffset = target.byteOffset, sourceOffset = source.byteOffset;
                     const alignedOffset = (targetLength > 64)
-                        ? targetLength & ~3 : 0;
+                        && (targetOffset % 4 === 0) && (sourceOffset % 4 === 0)
+                            ? targetLength & ~3 : 0;
                     if (alignedOffset) {
                         const length = (targetLength / 4) | 0;
-                        const targetTypedArray = new Int32Array(target.buffer, target.byteOffset, length);
-                        const sourceTypedArray = new Int32Array(source.buffer, source.byteOffset, length);
+                        const targetTypedArray = new Int32Array(target.buffer, targetOffset, length);
+                        const sourceTypedArray = new Int32Array(source.buffer, sourceOffset, length);
                         for (let index = length - 1; index >= 0; index--)
                             if (targetTypedArray[index] !== sourceTypedArray[index])
                                 return false;
                     }
                     for (let index = targetLength - 1; index >= alignedOffset; index--)
-                        if (target[index] !== source[index]) 
+                        if (target[index] !== source[index])
                             return false;
                     return true;
                 }
