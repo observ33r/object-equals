@@ -1,4 +1,4 @@
-interface ObjectEqualsOptions {
+export interface ObjectEqualsOptions {
     /**
      * Enable circular reference handling using a cache.
      * @default false
