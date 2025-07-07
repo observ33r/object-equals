@@ -7,16 +7,8 @@ const isRuntime = (typeof process === 'object');
 const isDeno = (typeof Deno === 'object');
 const isBun = (typeof Bun === 'object');
 
-const isBrowserOrWebWorker = (typeof window === 'object' || typeof self === 'object')
-    && typeof navigator === 'object' && typeof navigator.userAgent === 'string';
-
-const isV8 = (globalThis.chrome === 'object')
-    || (isBrowserOrWebWorker && navigator.userAgent.search(/chrome/i) > -1)
-    || (isRuntime && process.versions?.v8 !== undefined && !isBun);
-
-const isJSC = (globalThis.$?.IsHTMLDDA !== undefined)
-    || (isBrowserOrWebWorker && navigator.userAgent.match(/^(?!.*(chrome|crios)).*safari/i) !== null)
-    || (isRuntime && process.versions?.webkit !== undefined);
+const isV8 = (isRuntime && process.versions?.v8 !== undefined && !isBun);
+const isJSC = (isRuntime && process.versions?.webkit !== undefined);
 
 if (isDeno)
     try { var { isDeepStrictEqual } = await import('node:util'); } 
