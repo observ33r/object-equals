@@ -1,6 +1,7 @@
 [![npm](https://img.shields.io/npm/v/@observ33r/object-equals.svg)](https://www.npmjs.com/package/@observ33r/object-equals)
 [![Size](https://badgen.net/bundlephobia/minzip/@observ33r/object-equals)](https://bundlephobia.com/package/@observ33r/object-equals)
 [![License](https://img.shields.io/npm/l/@observ33r/object-equals.svg)](https://github.com/observ33r/object-equals/blob/main/LICENSE)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-ff69b4.svg)](https://www.paypal.com/donate/?hosted_button_id=PPPN7F3VXXE8W)
 
 # object-equals
 
@@ -3627,6 +3628,10 @@ or run individual tests:
 npx vitest run tests/objectEquals.test.js
 npx vitest run tests/objectEquals.lodash.test.js
 ```
+
+## Support
+
+If you find this project useful, you can support it with a one-time donation over [PayPal](https://www.paypal.com/donate/?hosted_button_id=PPPN7F3VXXE8W). Thank you!
 
 ## Contributing
 
