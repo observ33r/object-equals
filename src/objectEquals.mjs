@@ -1,5 +1,5 @@
 const { getOwnPropertySymbols, keys, prototype: { hasOwnProperty, toString } } = Object;
-const spliceArray = Array.prototype.splice, isTypedArray = ArrayBuffer.isView;
+const spliceArray = Array.prototype.splice, isBufferView = ArrayBuffer.isView;
 
 const REACT_ELEMENT_TYPE = Symbol.for('react.transitional.element');
 
@@ -117,7 +117,7 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                 }
                 if (tor === ArrayBuffer || tor === SharedArrayBuffer)
                     target = new Uint8Array(target), source = new Uint8Array(source), tor = Uint8Array;
-                if (tor === Uint8Array || isTypedArray(target)) {
+                if (tor === Uint8Array || isBufferView(target)) {
                     const targetLength = target.length;
                     if (targetLength !== source.length)
                         return false;
@@ -224,7 +224,7 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
                     : (tag === '[object Number]') ? Number
                     : (tag === '[object BigInt]') ? BigInt
                     : (tag === '[object Error]') ? Error
-                    : (isTypedArray(target)) ? Uint8Array
+                    : isBufferView(target) ? Uint8Array
                     : undefined;
                 if (tor !== undefined)
                     continue;
