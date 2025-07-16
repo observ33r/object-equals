@@ -254,11 +254,13 @@ export function objectEqualsCore(target, source, circular, crossrealm, react, sy
 export function objectEquals(target, source, options) {
     if (target === source)
         return true;
-    const circular = (options?.circular === true);
-    const crossrealm = (options?.crossrealm === true);
-    const react = (options?.react === true);
-    const symbols = (options?.symbols === true);
-    const fallback = (options?.fallback === true);
+    if (options == null && typeof options !== 'object')
+        return objectEqualsCore(target, source, false, false, false, false, false, undefined);
+    const circular = (options.circular === true);
+    const crossrealm = (options.crossrealm === true);
+    const react = (options.react === true);
+    const symbols = (options.symbols === true);
+    const fallback = (options.fallback === true);
     const cache = (circular)
         ? (options.cache != null)
             ? options.cache
