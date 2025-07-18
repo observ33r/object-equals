@@ -13,7 +13,7 @@ A fast, flexible and robust utility for deep equality comparison with type-speci
   Outperforms popular libraries like `lodash.isEqual`, `fast-equals`, `dequal`, `are-deeply-equal` and `node.isDeepStrictEqual`.
 
 - **Engine-Aware Design**  
-  Tailored execution paths for V8 and JSC based engines to maximize performance.
+  Tailored execution paths for V8 and JSC based runtimes to maximize performance.
 
 - **Web-First Architecture**  
   Uses a lightweight, browser-safe implementation by default with full compatibility across all modern browsers and runtimes.
@@ -42,8 +42,8 @@ npm install @observ33r/object-equals
 
 Compares two values for deep equality.
 
-- **target**: The first value to compare (`any`).
-- **source**: The second value to compare (`any`).
+- **target**: The first value to compare (`unknown`).
+- **source**: The second value to compare (`unknown`).
 - **options**: Optional configuration object (see below).
 - **Returns**: `boolean` - `true` if values are deeply equal, `false` otherwise.
 - **Throws**: `TypeError` if an unsupported object type is encountered.
