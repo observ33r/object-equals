@@ -32,8 +32,9 @@ export interface ObjectEqualsOptions {
     /**
      * Internal cache for circular references (automatically managed if circular is true).
      * Supports both Map and WeakMap since only objects are cached.
+     * @default undefined
      */
-    cache?: Map<any, any> | WeakMap<object, any>;
+    cache?: Map<object, object> | WeakMap<object, object>;
 }
 
 /**
@@ -51,14 +52,14 @@ export interface ObjectEqualsOptions {
  */
 
 export function objectEqualsCore(
-    target: any,
-    source: any,
-    circular: boolean | undefined,
-    crossrealm: boolean | undefined,
-    react: boolean | undefined,
-    symbols: boolean | undefined,
-    fallback: boolean | undefined,
-    cache: Map<any, any> | WeakMap<object, any> | undefined
+    target: unknown,
+    source: unknown,
+    circular: boolean | false,
+    crossrealm: boolean | false,
+    react: boolean | false,
+    symbols: boolean | false,
+    fallback: boolean | false,
+    cache: Map<object, object> | WeakMap<object, object> | undefined
 ): boolean;
 
 /**
@@ -69,4 +70,4 @@ export function objectEqualsCore(
  * @returns True if values are deeply equal, false otherwise.
  * @throws {TypeError} If an unsupported object type is encountered without fallback.
  */
-export function objectEquals(target: any, source: any, options?: ObjectEqualsOptions): boolean;
+export function objectEquals(target: unknown, source: unknown, options?: ObjectEqualsOptions): boolean;
